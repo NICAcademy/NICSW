@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIC Academy – Management System</title>
+<style>
+/* ── Reset & Base ── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#185FA5;--blue-light:#E6F1FB;--blue-mid:#B5D4F4;
+  --green:#2d7a0f;--green-light:#EAF3DE;
+  --red:#A32D2D;--red-light:#FCEBEB;
+  --amber:#854F0B;--amber-light:#FAEEDA;
+  --gray:#5F5E5A;--border:#e0ddd6;--bg:#f5f3ef;--surface:#fff;
+  --text:#1a1a18;--muted:#6b6964;--radius:8px;--radius-lg:12px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100vh;overflow:hidden}
+
+/* ── Login ── */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;width:340px;text-align:center}
+.login-card h1{font-size:22px;font-weight:600;color:var(--blue);margin-bottom:4px}
+.login-card p{font-size:13px;color:var(--muted);margin-bottom:28px}
+.login-card input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;margin-bottom:12px;outline:none}
+.login-card input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light)}
+.login-card button{width:100%;padding:11px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer}
+.login-card button:hover{background:#0c447c}
+.login-err{color:var(--red);font-size:12px;margin-top:8px}
+
+/* ── App Shell ── */
+#app{display:none;height:100vh;display:flex;flex-direction:column}
+#app.show{display:flex}
+
+/* ── Top Bar ── */
+.topbar{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;z-index:10}
+.topbar-logo{font-size:16px;font-weight:600;color:var(--blue);flex:0 0 auto}
+.topbar-logo span{font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
+.topbar-nav{display:flex;gap:2px;flex:1;overflow-x:auto}
+.topbar-nav::-webkit-scrollbar{display:none}
+.nav-btn{padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);border:none;background:transparent;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.nav-btn:hover{background:var(--bg);color:var(--text)}
+.nav-btn.active{background:var(--blue-light);color:var(--blue)}
+.topbar-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.topbar-right button{padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted)}
+.topbar-right button:hover{background:var(--bg)}
+
+/* ── Content ── */
+.content{flex:1;overflow-y:auto;padding:20px}
+.page{display:none}.page.active{display:block}
+
+/* ── Stats Grid ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.stat-label{font-size:11px;color:var(--muted);margin-bottom:5px}
+.stat-val{font-size:20px;font-weight:600}
+.stat-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.c-blue{color:var(--blue)}.c-green{color:var(--green)}.c-red{color:var(--red)}.c-amber{color:var(--amber)}
+
+/* ── Cards ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:16px;color:var(--text)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+
+/* ── Forms ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-row.c1{grid-template-columns:1fr}
+.form-row.c3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:600px){.form-row,.form-row.c3{grid-template-columns:1fr}}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:11px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.4px}
+.fg input,.fg select,.fg textarea{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);background:var(--surface);outline:none;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light)}
+.fg input[readonly]{background:var(--bg);color:var(--muted)}
+.fg textarea{resize:vertical;min-height:64px}
+.section-divider{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;border-top:1px solid var(--border);padding-top:14px;margin:14px 0 12px}
+
+/* ── Buttons ── */
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:all .15s}
+.btn:hover{background:var(--bg)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-primary:hover{background:#0c447c;border-color:#0c447c}
+.btn-success{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-danger{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-sm{padding:5px 10px;font-size:11px}
+
+/* ── Tables ── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--muted);background:var(--bg);white-space:nowrap}
+tbody td{padding:9px 12px;border-bottom:1px solid #f0ede8;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#faf9f7}
+
+/* ── Pills ── */
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500}
+.pill-new{background:#E6F1FB;color:#185FA5}
+.pill-interested{background:#FAEEDA;color:#854F0B}
+.pill-joined,.pill-paid,.pill-active,.pill-available{background:#EAF3DE;color:#2d7a0f}
+.pill-notint,.pill-due,.pill-maintenance{background:#FCEBEB;color:#A32D2D}
+.pill-occupied{background:#FAEEDA;color:#854F0B}
+.pill-reserved{background:#E6F1FB;color:#185FA5}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.toolbar input[type=text]{flex:1;min-width:160px;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text);outline:none}
+.toolbar input:focus{border-color:var(--blue)}
+.toolbar select{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text);outline:none}
+
+/* ── Cabin Grid ── */
+.cabin-map{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
+.cabin-tile{border-radius:var(--radius);padding:10px 6px;text-align:center;font-size:12px;cursor:pointer;border:1px solid}
+.cabin-tile.available{background:#EAF3DE;border-color:#C0DD97;color:#2d7a0f}
+.cabin-tile.occupied{background:#FAEEDA;border-color:#FAC775;color:#854F0B}
+.cabin-tile.reserved{background:#E6F1FB;border-color:#B5D4F4;color:#185FA5}
+.cabin-tile.maintenance{background:#FCEBEB;border-color:#F7C1C1;color:#A32D2D}
+.cabin-num{font-size:15px;font-weight:600}
+
+/* ── Receipt ── */
+.receipt{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;max-width:480px;font-size:13px}
+.receipt-hdr{text-align:center;padding-bottom:14px;margin-bottom:14px;border-bottom:1px dashed var(--border)}
+.receipt-hdr h2{font-size:20px;font-weight:700;color:var(--blue)}
+.receipt-row{display:flex;justify-content:space-between;padding:4px 0}
+.receipt-row .lbl{color:var(--muted)}
+.receipt-total{border-top:1px solid var(--border);margin-top:10px;padding-top:10px;font-weight:600;font-size:15px}
+.receipt-foot{text-align:center;margin-top:14px;padding-top:12px;border-top:1px dashed var(--border);font-size:11px;color:var(--muted)}
+
+/* ── WhatsApp template ── */
+.wa-box{background:#f0f8f0;border-left:3px solid #25D366;border-radius:0 8px 8px 0;padding:12px;margin-bottom:10px;font-size:13px}
+.wa-box strong{display:block;margin-bottom:4px}
+
+/* ── Toast ── */
+#toast{position:fixed;bottom:24px;right:24px;background:#1a1a18;color:#fff;padding:12px 18px;border-radius:var(--radius);font-size:13px;display:none;z-index:9999;max-width:300px}
+
+/* ── Loading ── */
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.spin{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Bar Chart ── */
+.chart-wrap{display:flex;align-items:flex-end;gap:6px;height:100px;margin:10px 0}
+.bar-group{flex:1;display:flex;gap:2px;align-items:flex-end}
+.bar{border-radius:3px 3px 0 0;min-height:2px}
+.bar.income{background:var(--blue)}
+.bar.exp{background:#E24B4A}
+.bar-lbl{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
+.chart-legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:6px}
+.chart-legend span{display:flex;align-items:center;gap:4px}
+.dot{width:8px;height:8px;border-radius:2px}
+
+/* ── Print ── */
+@media print{#login-screen,#app>.topbar,#app>.content .toolbar,.btn-row,.topbar-nav,.topbar-right{display:none!important}.receipt{box-shadow:none;border:none}}
+
+/* ── Progress Bar ── */
+.prog-row{margin-bottom:10px}
+.prog-row .pr-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.prog-bar{background:var(--bg);border-radius:4px;height:6px}
+.prog-fill{height:6px;border-radius:4px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <h1>🏫 NIC Academy</h1>
+    <p>Management System — Secure Login</p>
+    <input type="password" id="pwd-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">Login</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-logo">NIC Academy <span>Management</span></div>
+    <div class="topbar-nav">
+      <button class="nav-btn active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+      <button class="nav-btn" onclick="showPage('enquiries',this)">📋 Enquiries</button>
+      <button class="nav-btn" onclick="showPage('admissions',this)">👤 Admissions</button>
+      <button class="nav-btn" onclick="showPage('students',this)">👥 Students</button>
+      <button class="nav-btn" onclick="showPage('fees',this)">🧾 Fee Receipt</button>
+      <button class="nav-btn" onclick="showPage('dues',this)">⚠️ Fee Dues</button>
+      <button class="nav-btn" onclick="showPage('payments',this)">💰 Payments</button>
+      <button class="nav-btn" onclick="showPage('studyhall',this)">🏢 Study Hall</button>
+      <button class="nav-btn" onclick="showPage('expenses',this)">💳 Expenses</button>
+      <button class="nav-btn" onclick="showPage('reports',this)">📈 Reports</button>
+      <button class="nav-btn" onclick="showPage('whatsapp',this)">💬 WhatsApp</button>
+    </div>
+    <div class="topbar-right">
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Pages -->
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page active">
+      <div id="dash-stats" class="stat-grid"><div class="loading"><span class="spin"></span>Loading...</div></div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Monthly Income vs Expenses</div>
+          <div class="chart-wrap" id="dash-chart"></div>
+          <div class="chart-legend">
+            <span><span class="dot" style="background:var(--blue)"></span>Income</span>
+            <span><span class="dot" style="background:#E24B4A"></span>Expenses</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Upcoming Renewals (next 15 days)</div>
+          <div id="dash-renewals"><div class="loading"><span class="spin"></span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENQUIRIES -->
+    <div id="page-enquiries" class="page">
+      <div class="toolbar">
+        <input type="text" id="enq-search" placeholder="Search by name, mobile, status..." oninput="filterEnquiries()">
+        <select id="enq-filter-status" onchange="filterEnquiries()">
+          <option value="">All Status</option>
+          <option>New</option><option>Interested</option><option>Joined</option><option>Not Interested</option>
+        </select>
+        <button class="btn btn-primary" onclick="showEnqForm()">+ New Enquiry</button>
+        <button class="btn" onclick="exportTableCSV('enq-table','Enquiries')">⬇ Export</button>
+      </div>
+
+      <!-- Enquiry Form (hidden by default) -->
+      <div id="enq-form-wrap" style="display:none">
+        <div class="card">
+          <div class="card-title" id="enq-form-title">New Enquiry</div>
+          <input type="hidden" id="enq-id">
+          <div class="form-row">
+            <div class="fg"><label>Enquiry Date</label><input type="date" id="enq-date"></div>
+            <div class="fg"><label>Name *</label><input type="text" id="enq-name" placeholder="Full name"></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label>Mobile *</label><input type="tel" id="enq-mobile" placeholder="10-digit mobile"></div>
+            <div class="fg"><label>Alternate Mobile</label><input type="tel" id="enq-altmobile" placeholder="Optional"></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label>Visiting For *</label>
+              <select id="enq-visiting" onchange="toggleEnqFields()">
+                <option value="">Select...</option>
+                <option>Study Hall</option><option>Tutorial</option><option>Mock Exams</option>
+              </select>
+            </div>
+            <div class="fg" id="enq-class-wrap" style="display:none">
+              <label>Class</label>
+              <select id="enq-class"><option>Class 6</option><option>Class 7</option><option>Class 8</option><option>Class 9</option><option>Class 10</option><option>Intermediate</option></select>
+            </div>
+          </div>
+          <div class="form-row" id="enq-board-wrap" style="display:none">
+            <div class="fg"><label>Board</label><select id="enq-board"><option>SSC</option><option>CBSE</option><option>ICSE</option><option>Others</option></select></div>
+            <div class="fg"></div>
+          </div>
+          <div class="form-row" id="enq-prep-wrap" style="display:none">
+            <div class="fg"><label>Preparing For</label>
+              <select id="enq-prep"><option>JEE</option><option>NEET</option><option>EAMCET</option><option>Foundation</option><option>TSPSC</option><option>UPSC</option><option>Others</option></select>
+            </div>
+            <div class="fg"></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label>How Did You Know About NIC?</label>
+              <select id="enq-source"><option>Google</option><option>WhatsApp</option><option>Friends</option><option>Banner</option><option>Social Media</option><option>Walk-In</option><option>Others</option></select>
+            </div>
+            <div class="fg"><label>Status</label>
+              <select id="enq-status"><option>New</option><option>Interested</option><option>Joined</option><option>Not Interested</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label>Follow-up Date</label><input type="date" id="enq-followup"></div>
+            <div class="fg"><label>Remarks</label><input type="text" id="enq-remarks" placeholder="Any notes..."></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveEnquiry()">💾 Save Enquiry</button>
+            <button class="btn" onclick="hideEnqForm()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="tbl-wrap">
+          <table id="enq-table">
+            <thead><tr><th>Date</th><th>Name</th><th>Mobile</th><th>Visiting For</th><th>Source</th><th>Follow-up</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="enq-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMISSIONS -->
+    <div id="page-admissions" class="page">
+      <div class="card">
+        <div class="card-title">New Admission</div>
+        <div class="form-row">
+          <div class="fg"><label>Admission ID (Auto)</label><input id="adm-id" readonly style="color:var(--blue);font-weight:600"></div>
+          <div class="fg"><label>Name *</label><input id="adm-name" placeholder="Student full name"></div>
+        </div>
+        <div class="form-row c3">
+          <div class="fg"><label>Gender</label><select id="adm-gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+          <div class="fg"><label>Age</label><input type="number" id="adm-age" min="5" max="60"></div>
+          <div class="fg"><label>Date of Birth</label><input type="date" id="adm-dob"></div>
+        </div>
+        <div class="section-divider">Academic Details</div>
+        <div class="form-row c3">
+          <div class="fg"><label>Class / Education</label><input id="adm-class" placeholder="e.g. Class 10, B.Tech"></div>
+          <div class="fg"><label>School / College</label><input id="adm-school" placeholder="Institution name"></div>
+          <div class="fg"><label>Board</label><select id="adm-board"><option>SSC</option><option>CBSE</option><option>ICSE</option><option>Intermediate</option><option>Others</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label>Exam Preparing For</label><select id="adm-prep"><option>JEE</option><option>NEET</option><option>EAMCET</option><option>Foundation</option><option>TSPSC</option><option>UPSC</option><option>Others</option><option>N/A</option></select></div>
+          <div class="fg"><label>Medium</label><select id="adm-medium"><option>Telugu</option><option>English</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label>Joined For *</label><select id="adm-joinedfor"><option>Study Hall</option><option>Tutorial</option><option>Mock Exams</option><option>Library</option></select></div>
+          <div class="fg"><label>Mock Test Required</label><select id="adm-mock"><option>No</option><option>Yes</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label>Cabin ID</label><select id="adm-cabin"><option value="">None</option></select></div>
+          <div class="fg"><label>Membership Start Date</label><input type="date" id="adm-start"></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label>Membership End Date</label><input type="date" id="adm-end"></div>
+          <div class="fg"></div>
+        </div>
+        <div class="section-divider">Parent / Guardian Details</div>
+        <div class="form-row">
+          <div class="fg"><label>Parent Name</label><input id="adm-parent" placeholder="Full name"></div>
+          <div class="fg"><label>Relationship</label><select id="adm-rel"><option>Father</option><option>Mother</option><option>Guardian</option></select></div>
+        </div>
+        <div class="form-row c3">
+          <div class="fg"><label>Mobile *</label><input type="tel" id="adm-pmobile" placeholder="Parent mobile"></div>
+          <div class="fg"><label>Alternate Mobile</label><input type="tel" id="adm-altmobile"></div>
+          <div class="fg"><label>Email</label><input type="email" id="adm-email"></div>
+        </div>
+        <div class="form-row c1">
+          <div class="fg"><label>Address</label><input id="adm-address" placeholder="Full address"></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label>Referred By</label><input id="adm-ref" placeholder="Name or source"></div>
+          <div class="fg"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveAdmission()">✅ Save Admission</button>
+          <button class="btn" onclick="clearAdmission()">🔄 Clear Form</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENTS -->
+    <div id="page-students" class="page">
+      <div class="toolbar">
+        <input type="text" id="stu-search" placeholder="Search by name, ID, mobile..." oninput="filterStudents()">
+        <select id="stu-filter" onchange="filterStudents()">
+          <option value="">All</option><option>Study Hall</option><option>Tutorial</option><option>Mock Exams</option>
+        </select>
+        <button class="btn" onclick="exportTableCSV('stu-table','Students')">⬇ Export</button>
+      </div>
+      <div class="card">
+        <div class="tbl-wrap">
+          <table id="stu-table">
+            <thead><tr><th>ID</th><th>Name</th><th>Mobile</th><th>Parent Mobile</th><th>Course</th><th>Cabin</th><th>Valid Until</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="stu-body"><tr><td colspan="9" class="loading"><span class="spin"></span>Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEES -->
+    <div id="page-fees" class="page">
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Generate Fee Receipt</div>
+          <div class="fg" style="margin-bottom:10px">
+            <label>Search Student (Name or ID)</label>
+            <input type="text" id="fee-search" placeholder="Type name or admission ID..." oninput="searchStudentForFee()">
+          </div>
+          <div id="fee-student-info" style="display:none;background:var(--bg);border-radius:var(--radius);padding:10px;margin-bottom:12px;font-size:13px"></div>
+          <div class="form-row">
+            <div class="fg"><label>Joined For</label><select id="fee-for"><option>Study Hall</option><option>Tutorial Classes</option><option>Library</option><option>Mock Exams</option><option>Others</option></select></div>
+            <div class="fg"><label>Package</label><select id="fee-pkg"><option>Daily</option><option>Weekly</option><option>10 Days</option><option>Monthly</option><option>Quarterly</option><option>Half-Yearly</option><option>Yearly</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label>Start Date</label><input type="date" id="fee-start"></div>
+            <div class="fg"><label>End Date</label><input type="date" id="fee-end"></div>
+          </div>
+          <div class="form-row c3">
+            <div class="fg"><label>Total Fee (₹)</label><input type="number" id="fee-total" oninput="calcBalance()"></div>
+            <div class="fg"><label>Amount Paid (₹)</label><input type="number" id="fee-paid" oninput="calcBalance()"></div>
+            <div class="fg"><label>Balance (₹)</label><input type="number" id="fee-balance" readonly style="color:var(--red)"></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label>Payment Mode</label><select id="fee-mode"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option></select></div>
+            <div class="fg"><label>Transaction Ref No.</label><input id="fee-ref" placeholder="UPI / Cheque ref"></div>
+          </div>
+          <div class="fg" style="margin-bottom:12px"><label>Received By</label><input id="fee-by" placeholder="Your name" value="Admin"></div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="generateReceipt()">🧾 Generate Receipt</button>
+          </div>
+        </div>
+        <div id="receipt-preview"></div>
+      </div>
+    </div>
+
+    <!-- FEE DUES -->
+    <div id="page-dues" class="page">
+      <div id="dues-stats" class="stat-grid" style="grid-template-columns:repeat(3,1fr)"></div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div class="card-title" style="margin:0">Fee Dues &amp; Expiring Memberships</div>
+          <button class="btn btn-success" onclick="bulkWhatsApp()">📲 Bulk WhatsApp</button>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Student</th><th>Mobile</th><th>Course</th><th>Expires On</th><th>Balance Due</th><th>Days Left</th><th>Action</th></tr></thead>
+            <tbody id="dues-body"><tr><td colspan="7" class="loading"><span class="spin"></span>Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">WhatsApp Reminder Templates</div>
+        <div class="wa-box"><strong>Template 1 – Fee Reminder</strong>Dear [Student Name],<br>Your fee of ₹[Amount] is pending.<br>Kindly make payment on or before [Due Date].<br>NIC Academy Contact: 8901989999</div>
+        <div class="wa-box"><strong>Template 2 – Membership Renewal</strong>Dear [Student Name],<br>Your Study Hall membership will expire on [Date].<br>Please renew to continue your access.<br>NIC Academy</div>
+      </div>
+    </div>
+
+    <!-- PAYMENT SUMMARY -->
+    <div id="page-payments" class="page">
+      <div class="toolbar">
+        <input type="date" id="pay-from">
+        <span style="color:var(--muted);font-size:13px">to</span>
+        <input type="date" id="pay-to">
+        <select id="pay-mode"><option value="">All Modes</option><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option></select>
+        <button class="btn btn-primary" onclick="loadPayments()">Filter</button>
+        <button class="btn" onclick="exportTableCSV('pay-table','Payments')">⬇ Export</button>
+      </div>
+      <div id="pay-stats" class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px"></div>
+      <div class="card">
+        <div class="tbl-wrap">
+          <table id="pay-table">
+            <thead><tr><th>Receipt No</th><th>Date</th><th>Student</th><th>Course</th><th>Package</th><th>Total</th><th>Paid</th><th>Balance</th><th>Mode</th></tr></thead>
+            <tbody id="pay-body"><tr><td colspan="9" class="loading"><span class="spin"></span>Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDY HALL -->
+    <div id="page-studyhall" class="page">
+      <div id="sh-stats" class="stat-grid" style="grid-template-columns:repeat(4,1fr)"></div>
+      <div class="card">
+        <div class="card-title">Cabin Status Map</div>
+        <div style="display:flex;gap:16px;font-size:11px;color:var(--muted);margin-bottom:12px;flex-wrap:wrap">
+          <span>🟢 Available</span><span>🟡 Occupied</span><span>🔵 Reserved</span><span>🔴 Maintenance</span>
+        </div>
+        <div class="cabin-map" id="cabin-map"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cabin Details</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Cabin ID</th><th>Type</th><th>Status</th><th>Student</th><th>Since</th><th>Notes</th><th>Update Status</th></tr></thead>
+            <tbody id="cabin-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPENSES -->
+    <div id="page-expenses" class="page">
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Add Expense</div>
+          <div class="form-row">
+            <div class="fg"><label>Date *</label><input type="date" id="exp-date"></div>
+            <div class="fg"><label>Category *</label>
+              <select id="exp-cat">
+                <option>Rent</option><option>Electricity</option><option>Internet</option><option>Salaries</option>
+                <option>Water</option><option>Maintenance</option><option>Marketing</option><option>Stationery</option><option>Miscellaneous</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row c1">
+            <div class="fg"><label>Description</label><input id="exp-desc" placeholder="Brief description"></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label>Amount (₹) *</label><input type="number" id="exp-amount" placeholder="0.00"></div>
+            <div class="fg"><label>Paid By</label><input id="exp-by" placeholder="Name or account" value="Admin"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveExpense()">💾 Save Expense</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">This Month's Breakdown</div>
+          <div id="exp-breakdown"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div class="card-title" style="margin:0">Expense History</div>
+          <button class="btn" onclick="exportTableCSV('exp-table','Expenses')">⬇ Export</button>
+        </div>
+        <div class="tbl-wrap">
+          <table id="exp-table">
+            <thead><tr><th>ID</th><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Paid By</th><th>Delete</th></tr></thead>
+            <tbody id="exp-body"><tr><td colspan="7" class="loading"><span class="spin"></span>Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div id="page-reports" class="page">
+      <div class="toolbar">
+        <select id="rpt-period" onchange="updateReportDates()">
+          <option value="month">This Month</option>
+          <option value="week">This Week</option>
+          <option value="quarter">This Quarter</option>
+          <option value="year">This Year</option>
+          <option value="custom">Custom Range</option>
+        </select>
+        <input type="date" id="rpt-from" style="display:none">
+        <input type="date" id="rpt-to" style="display:none">
+        <button class="btn btn-primary" onclick="loadReport()">Generate Report</button>
+        <button class="btn" onclick="printReport()">🖨 Print</button>
+      </div>
+      <div id="rpt-summary" class="grid3"></div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Income vs Expenses</div>
+          <div class="chart-wrap" id="rpt-chart" style="height:120px"></div>
+          <div class="chart-legend">
+            <span><span class="dot" style="background:var(--blue)"></span>Income</span>
+            <span><span class="dot" style="background:#E24B4A"></span>Expenses</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Payment Mode Breakdown</div>
+          <div id="rpt-modes"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Fee Transactions</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Receipt</th><th>Date</th><th>Student</th><th>Course</th><th>Package</th><th>Paid</th><th>Mode</th></tr></thead>
+            <tbody id="rpt-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHATSAPP -->
+    <div id="page-whatsapp" class="page">
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Send Custom Message</div>
+          <div class="fg" style="margin-bottom:10px">
+            <label>Category</label>
+            <select id="wa-cat" onchange="loadWATemplate()">
+              <option>Fee Reminder</option><option>Admission Confirmation</option><option>Membership Renewal</option>
+              <option>Exam Wishes</option><option>Holiday Notice</option><option>New Batch Announcement</option>
+              <option>Mock Exam Notification</option><option>Study Tips</option>
+            </select>
+          </div>
+          <div class="fg" style="margin-bottom:10px">
+            <label>Send To</label>
+            <select id="wa-to"><option value="individual">Individual Student</option><option value="all">All Active Students</option><option value="studyhall">Study Hall Members</option><option value="tutorial">Tutorial Students</option><option value="due">Fee Due Students</option></select>
+          </div>
+          <div class="fg" id="wa-student-wrap" style="margin-bottom:10px">
+            <label>Select Student</label>
+            <select id="wa-student"><option value="">-- select student --</option></select>
+          </div>
+          <div class="fg" style="margin-bottom:12px">
+            <label>Message</label>
+            <textarea id="wa-msg" rows="6" placeholder="Type your message..."></textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-success" onclick="sendWhatsApp()">📲 Open WhatsApp</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Message Templates</div>
+          <div id="wa-templates"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<div id="toast"></div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIKjmUbt29qML3vow7e05WtHgeXPvUyJDcRFKHWS0E74LNMMVTDnOOlN55ufmYVq8B/exec'; // ← replace after deploying
+
+// ── Session ───────────────────────────────────────────────────
+let sessionActive = false;
+let allStudents = [], allEnquiries = [], allFees = [], allExpenses = [], allCabins = [];
+
+// ── Login ─────────────────────────────────────────────────────
+async function doLogin() {
+  const pwd = document.getElementById('pwd-input').value;
+  if (!pwd) return;
+  try {
+    const res = await api('login', { password: pwd });
+    sessionActive = true;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').classList.add('show');
+    loadDashboard();
+    loadAllData();
+  } catch(e) {
+    document.getElementById('login-err').textContent = e.message || 'Login failed';
+  }
+}
+
+function logout() {
+  sessionActive = false;
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('login-err').textContent = '';
+}
+
+// ── API (CORS-safe via GET + URL params) ─────────────────────
+async function api(action, body = {}) {
+  // Google Apps Script requires GET with callback OR POST without custom headers
+  // We send everything as a flat JSON string in a GET param to avoid CORS preflight
+  const payload = JSON.stringify({ action, ...body });
+  const url = APPS_SCRIPT_URL + '?action=' + encodeURIComponent(action) +
+              '&payload=' + encodeURIComponent(payload);
+
+  // Try POST first (works when script is deployed correctly)
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // text/plain avoids CORS preflight
+      body: JSON.stringify({ action, ...body }),
+      redirect: 'follow'
+    });
+    const text = await res.text();
+    const json = JSON.parse(text);
+    if (!json.success) throw new Error(json.error || 'API Error');
+    return json.data;
+  } catch(e) {
+    // Fallback: GET request (no preflight, works with GAS)
+    const res2 = await fetch(url, { method: 'GET', redirect: 'follow' });
+    const text2 = await res2.text();
+    const json2 = JSON.parse(text2);
+    if (!json2.success) throw new Error(json2.error || 'API Error');
+    return json2.data;
+  }
+}
+
+async function loadAllData() {
+  [allStudents, allEnquiries, allFees, allExpenses, allCabins] = await Promise.all([
+    api('getStudents'), api('getEnquiries'), api('getFees'), api('getExpenses'), api('getCabins')
+  ]);
+  renderEnquiries(allEnquiries);
+  renderStudents(allStudents);
+  renderFees(allFees);
+  renderExpenses(allExpenses);
+  renderCabins(allCabins);
+  renderDues();
+  populateWAStudents();
+  populateCabinSelect();
+}
+
+// ── Page Nav ──────────────────────────────────────────────────
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'dashboard') loadDashboard();
+  if (id === 'reports') { updateReportDates(); loadReport(); }
+  if (id === 'payments') loadPayments();
+}
+
+// ── Toast ─────────────────────────────────────────────────────
+function toast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  t.style.background = isError ? '#A32D2D' : '#1a1a18';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+// ── Dashboard ─────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const d = await api('getDashboard');
+    document.getElementById('dash-stats').innerHTML = `
+      <div class="stat-card"><div class="stat-label">Total Enquiries</div><div class="stat-val c-blue">${d.totalEnquiries}</div></div>
+      <div class="stat-card"><div class="stat-label">Active Students</div><div class="stat-val c-green">${d.activeStudents}</div></div>
+      <div class="stat-card"><div class="stat-label">Study Hall Members</div><div class="stat-val c-blue">${d.studyHallMembers}</div></div>
+      <div class="stat-card"><div class="stat-label">Tutorial Students</div><div class="stat-val c-blue">${d.tutorialStudents}</div></div>
+      <div class="stat-card"><div class="stat-label">Mock Exam Students</div><div class="stat-val c-blue">${d.mockExamStudents}</div></div>
+      <div class="stat-card"><div class="stat-label">Today's Collection</div><div class="stat-val c-green">₹${fmt(d.todayCollection)}</div></div>
+      <div class="stat-card"><div class="stat-label">Monthly Collection</div><div class="stat-val c-green">₹${fmt(d.monthCollection)}</div></div>
+      <div class="stat-card"><div class="stat-label">Pending Fees</div><div class="stat-val c-red">₹${fmt(d.pendingFees)}</div></div>
+      <div class="stat-card"><div class="stat-label">Available Cabins</div><div class="stat-val c-green">${d.availCabins}</div></div>
+      <div class="stat-card"><div class="stat-label">Occupied Cabins</div><div class="stat-val c-amber">${d.occCabins}</div></div>
+      <div class="stat-card"><div class="stat-label">Expenses This Month</div><div class="stat-val c-red">₹${fmt(d.monthExpenses)}</div></div>
+      <div class="stat-card"><div class="stat-label">Profit This Month</div><div class="stat-val ${d.profit >= 0 ? 'c-green' : 'c-red'}">₹${fmt(d.profit)}</div></div>
+    `;
+    renderRenewals();
+  } catch(e) { toast('Dashboard load error: ' + e.message, true); }
+}
+
+function renderRenewals() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const in15 = new Date(today); in15.setDate(in15.getDate() + 15);
+  const upcoming = allStudents.filter(s => {
+    const end = new Date(s['Membership End Date']);
+    return end >= today && end <= in15;
+  }).sort((a,b) => new Date(a['Membership End Date']) - new Date(b['Membership End Date']));
+  if (!upcoming.length) { document.getElementById('dash-renewals').innerHTML = '<div style="color:var(--muted);font-size:13px;padding:10px 0">No renewals in next 15 days</div>'; return; }
+  document.getElementById('dash-renewals').innerHTML = `<div class="tbl-wrap"><table>
+    <thead><tr><th>Name</th><th>Course</th><th>Expires</th><th>Days</th></tr></thead>
+    <tbody>${upcoming.map(s => {
+      const days = Math.ceil((new Date(s['Membership End Date']) - today) / 86400000);
+      const c = days <= 3 ? 'c-red' : days <= 7 ? 'c-amber' : '';
+      return `<tr><td>${s.Name}</td><td>${s['Joined For']}</td><td class="${c}">${s['Membership End Date']}</td><td class="${c}">${days}d</td></tr>`;
+    }).join('')}</tbody></table></div>`;
+}
+
+// ── Enquiries ─────────────────────────────────────────────────
+function renderEnquiries(data) {
+  const body = document.getElementById('enq-body');
+  if (!data.length) { body.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">No enquiries found</td></tr>'; return; }
+  body.innerHTML = data.map(e => `
+    <tr>
+      <td>${e['Enquiry Date'] || ''}</td>
+      <td><strong>${e.Name || ''}</strong></td>
+      <td>${e.Mobile || ''}</td>
+      <td>${e['Visiting For'] || ''} ${e['Class (if Tutorial)'] ? '– ' + e['Class (if Tutorial)'] : ''} ${e['Preparing For'] ? '(' + e['Preparing For'] + ')' : ''}</td>
+      <td>${e['How Did You Know'] || ''}</td>
+      <td>${e['Follow-up Date'] || '—'}</td>
+      <td><span class="pill pill-${pillClass(e.Status)}">${e.Status || ''}</span></td>
+      <td style="display:flex;gap:4px">
+        <button class="btn btn-sm" onclick="editEnquiry('${e['Enquiry ID']}')">✏️</button>
+        <button class="btn btn-sm btn-primary" onclick="convertToAdmission('${e['Enquiry ID']}')">→ Admit</button>
+      </td>
+    </tr>`).join('');
+}
+
+function filterEnquiries() {
+  const q = document.getElementById('enq-search').value.toLowerCase();
+  const st = document.getElementById('enq-filter-status').value;
+  renderEnquiries(allEnquiries.filter(e =>
+    (!q || [e.Name,e.Mobile,e.Status].some(v => v && v.toLowerCase().includes(q))) &&
+    (!st || e.Status === st)
+  ));
+}
+
+function showEnqForm() {
+  document.getElementById('enq-form-wrap').style.display = 'block';
+  document.getElementById('enq-form-title').textContent = 'New Enquiry';
+  document.getElementById('enq-id').value = '';
+  document.getElementById('enq-date').value = todayStr();
+  ['enq-name','enq-mobile','enq-altmobile','enq-remarks','enq-followup'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('enq-visiting').value = '';
+  document.getElementById('enq-status').value = 'New';
+  toggleEnqFields();
+}
+
+function hideEnqForm() { document.getElementById('enq-form-wrap').style.display = 'none'; }
+
+function toggleEnqFields() {
+  const v = document.getElementById('enq-visiting').value;
+  document.getElementById('enq-class-wrap').style.display = v === 'Tutorial' ? '' : 'none';
+  document.getElementById('enq-board-wrap').style.display = v === 'Tutorial' ? '' : 'none';
+  document.getElementById('enq-prep-wrap').style.display = v === 'Study Hall' ? '' : 'none';
+}
+
+async function saveEnquiry() {
+  const name = document.getElementById('enq-name').value.trim();
+  const mobile = document.getElementById('enq-mobile').value.trim();
+  if (!name || !mobile) return toast('Name and mobile are required', true);
+  const body = {
+    enquiryDate: document.getElementById('enq-date').value,
+    name, mobile,
+    alternateMobile: document.getElementById('enq-altmobile').value,
+    visitingFor: document.getElementById('enq-visiting').value,
+    'class_': document.getElementById('enq-class').value,
+    board: document.getElementById('enq-board').value,
+    preparingFor: document.getElementById('enq-prep').value,
+    howKnew: document.getElementById('enq-source').value,
+    remarks: document.getElementById('enq-remarks').value,
+    followUpDate: document.getElementById('enq-followup').value,
+    status: document.getElementById('enq-status').value
+  };
+  try {
+    await api('addEnquiry', body);
+    toast('Enquiry saved!');
+    hideEnqForm();
+    allEnquiries = await api('getEnquiries');
+    renderEnquiries(allEnquiries);
+  } catch(e) { toast(e.message, true); }
+}
+
+function editEnquiry(id) {
+  const e = allEnquiries.find(e => e['Enquiry ID'] === id);
+  if (!e) return;
+  showEnqForm();
+  document.getElementById('enq-form-title').textContent = 'Edit Enquiry';
+  document.getElementById('enq-id').value = id;
+  document.getElementById('enq-date').value = e['Enquiry Date'] || '';
+  document.getElementById('enq-name').value = e.Name || '';
+  document.getElementById('enq-mobile').value = e.Mobile || '';
+  document.getElementById('enq-altmobile').value = e['Alternate Mobile'] || '';
+  document.getElementById('enq-visiting').value = e['Visiting For'] || '';
+  document.getElementById('enq-remarks').value = e.Remarks || '';
+  document.getElementById('enq-followup').value = e['Follow-up Date'] || '';
+  document.getElementById('enq-status').value = e.Status || 'New';
+  toggleEnqFields();
+}
+
+function convertToAdmission(id) {
+  const e = allEnquiries.find(e => e['Enquiry ID'] === id);
+  if (!e) return;
+  showPage('admissions', document.querySelector('.nav-btn:nth-child(3)'));
+  document.getElementById('adm-name').value = e.Name || '';
+  document.getElementById('adm-pmobile').value = e.Mobile || '';
+  toast('Enquiry data loaded into admission form');
+}
+
+// ── Admissions ────────────────────────────────────────────────
+function populateCabinSelect() {
+  const sel = document.getElementById('adm-cabin');
+  const available = allCabins.filter(c => c.Status === 'Available' || c.Status === 'Reserved');
+  sel.innerHTML = '<option value="">None</option>' + available.map(c => `<option value="${c['Cabin ID']}">${c['Cabin ID']} (${c['AC / Non-AC']})</option>`).join('');
+}
+
+async function saveAdmission() {
+  const name = document.getElementById('adm-name').value.trim();
+  const pmobile = document.getElementById('adm-pmobile').value.trim();
+  if (!name || !pmobile) return toast('Name and parent mobile are required', true);
+  const body = {
+    name, gender: v('adm-gender'), age: v('adm-age'), dob: v('adm-dob'),
+    classEducation: v('adm-class'), schoolName: v('adm-school'), board: v('adm-board'),
+    preparingFor: v('adm-prep'), medium: v('adm-medium'), joinedFor: v('adm-joinedfor'),
+    mockTest: v('adm-mock'), cabinId: v('adm-cabin'), startDate: v('adm-start'), endDate: v('adm-end'),
+    parentName: v('adm-parent'), relationship: v('adm-rel'), parentMobile: pmobile,
+    altMobile: v('adm-altmobile'), address: v('adm-address'), email: v('adm-email'), referredBy: v('adm-ref')
+  };
+  try {
+    const res = await api('addStudent', body);
+    toast('Admission saved! ID: ' + res.id);
+    document.getElementById('adm-id').value = res.id;
+    allStudents = await api('getStudents');
+    allCabins = await api('getCabins');
+    renderStudents(allStudents);
+    renderCabins(allCabins);
+    populateCabinSelect();
+    populateWAStudents();
+  } catch(e) { toast(e.message, true); }
+}
+
+function clearAdmission() {
+  ['adm-name','adm-age','adm-dob','adm-class','adm-school','adm-start','adm-end','adm-parent','adm-pmobile','adm-altmobile','adm-email','adm-address','adm-ref'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('adm-id').value = 'Auto-generated';
+}
+
+// ── Students ──────────────────────────────────────────────────
+function renderStudents(data) {
+  const today = todayStr();
+  document.getElementById('stu-body').innerHTML = data.length
+    ? data.map(s => {
+        const active = s['Membership End Date'] >= today;
+        return `<tr>
+          <td style="font-weight:600;color:var(--blue)">${s['Admission ID']}</td>
+          <td>${s.Name}</td><td>${s['Parent Mobile']}</td><td>${s['Alternate Mobile'] || '—'}</td>
+          <td>${s['Joined For']}</td><td>${s['Cabin ID'] || '—'}</td>
+          <td>${s['Membership End Date'] || '—'}</td>
+          <td><span class="pill ${active ? 'pill-active' : 'pill-due'}">${active ? 'Active' : 'Expired'}</span></td>
+          <td><button class="btn btn-sm btn-danger" onclick="deleteStudent('${s['Admission ID']}')">🗑</button></td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">No students found</td></tr>';
+}
+
+function filterStudents() {
+  const q = document.getElementById('stu-search').value.toLowerCase();
+  const f = document.getElementById('stu-filter').value;
+  renderStudents(allStudents.filter(s =>
+    (!q || [s['Admission ID'],s.Name,s['Parent Mobile']].some(v => v && v.toLowerCase().includes(q))) &&
+    (!f || s['Joined For'] === f)
+  ));
+}
+
+async function deleteStudent(id) {
+  if (!confirm('Delete student ' + id + '? This cannot be undone.')) return;
+  try {
+    await api('deleteStudent', { id });
+    toast('Student deleted');
+    allStudents = await api('getStudents');
+    renderStudents(allStudents);
+  } catch(e) { toast(e.message, true); }
+}
+
+// ── Fees ──────────────────────────────────────────────────────
+function searchStudentForFee() {
+  const q = document.getElementById('fee-search').value.toLowerCase();
+  if (q.length < 2) { document.getElementById('fee-student-info').style.display = 'none'; return; }
+  const found = allStudents.find(s =>
+    s.Name.toLowerCase().includes(q) || (s['Admission ID'] && s['Admission ID'].toLowerCase().includes(q))
+  );
+  const info = document.getElementById('fee-student-info');
+  if (found) {
+    info.style.display = 'block';
+    info.innerHTML = `<strong>${found.Name}</strong> &nbsp;|&nbsp; ${found['Admission ID']} &nbsp;|&nbsp; ${found['Parent Mobile']} &nbsp;|&nbsp; Cabin: ${found['Cabin ID'] || 'None'}`;
+    info.dataset.admId = found['Admission ID'];
+    info.dataset.name = found.Name;
+    info.dataset.mobile = found['Parent Mobile'];
+    info.dataset.cabin = found['Cabin ID'] || '';
+    document.getElementById('fee-for').value = found['Joined For'] || 'Study Hall';
+  } else {
+    info.style.display = 'none';
+  }
+}
+
+function calcBalance() {
+  const total = parseFloat(document.getElementById('fee-total').value) || 0;
+  const paid = parseFloat(document.getElementById('fee-paid').value) || 0;
+  document.getElementById('fee-balance').value = total - paid;
+}
+
+async function generateReceipt() {
+  const info = document.getElementById('fee-student-info');
+  if (!info.dataset.admId) return toast('Please select a student first', true);
+  const total = parseFloat(document.getElementById('fee-total').value) || 0;
+  const paid = parseFloat(document.getElementById('fee-paid').value) || 0;
+  const body = {
+    admissionId: info.dataset.admId, studentName: info.dataset.name, mobile: info.dataset.mobile,
+    joinedFor: v('fee-for'), package: v('fee-pkg'), cabinId: info.dataset.cabin,
+    startDate: v('fee-start'), endDate: v('fee-end'),
+    totalFee: total, amountPaid: paid, balanceAmount: total - paid,
+    paymentMode: v('fee-mode'), transactionRef: v('fee-ref'), receivedBy: v('fee-by')
+  };
+  try {
+    const res = await api('addFee', body);
+    toast('Receipt generated: ' + res.receipt);
+    allFees = await api('getFees');
+    renderFees(allFees);
+    showReceiptPreview({ ...body, receiptNo: res.receipt, dateTime: new Date().toLocaleString('en-IN') });
+  } catch(e) { toast(e.message, true); }
+}
+
+function showReceiptPreview(r) {
+  document.getElementById('receipt-preview').innerHTML = `
+    <div class="receipt">
+      <div class="receipt-hdr">
+        <h2>🏫 NIC Academy</h2>
+        <div style="font-size:12px;color:var(--muted)">Study Hall &amp; Tutorial Centre | Ph: 8901989999</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--muted)">Receipt: <strong>${r.receiptNo}</strong> | ${r.dateTime}</div>
+      </div>
+      ${rrow('Student',r.studentName)}${rrow('Admission ID',r.admissionId)}${rrow('Mobile',r.mobile)}
+      ${rrow('Joined For',r.joinedFor)}${rrow('Package',r.package)}${rrow('Cabin',r.cabinId||'N/A')}
+      ${rrow('Validity',r.startDate + ' to ' + r.endDate)}${rrow('Payment Mode',r.paymentMode)}
+      ${r.transactionRef ? rrow('Ref No.',r.transactionRef) : ''}
+      <div class="receipt-total">
+        ${rrow('Total Fee','₹'+fmt(r.totalFee))}${rrow('Amount Paid','₹'+fmt(r.amountPaid))}
+        <div class="receipt-row"><span class="lbl">Balance</span><span style="color:${r.balanceAmount>0?'var(--red)':'var(--green'})">₹${fmt(r.balanceAmount)}</span></div>
+      </div>
+      <div class="receipt-foot">Received by: ${r.receivedBy} | Thank you!<br><br>
+        <button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print Receipt</button>
+      </div>
+    </div>`;
+}
+
+function rrow(l, v) { return `<div class="receipt-row"><span class="lbl">${l}</span><span>${v}</span></div>`; }
+
+function renderFees(data) {
+  // used by payment page
+  renderPaymentsTable(data);
+}
+
+// ── Fee Dues ──────────────────────────────────────────────────
+function renderDues() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const in15 = new Date(today); in15.setDate(in15.getDate() + 15);
+  const dueStudents = allStudents.filter(s => {
+    const end = new Date(s['Membership End Date']);
+    return !isNaN(end) && end <= in15;
+  }).sort((a,b) => new Date(a['Membership End Date']) - new Date(b['Membership End Date']));
+
+  const pending = allFees.reduce((sum, f) => sum + (parseFloat(f['Balance Amount']) || 0), 0);
+  const expThisWeek = dueStudents.filter(s => {
+    const d = Math.ceil((new Date(s['Membership End Date']) - today) / 86400000);
+    return d >= 0 && d <= 7;
+  }).length;
+
+  document.getElementById('dues-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Pending Fees (Total)</div><div class="stat-val c-red">₹${fmt(pending)}</div></div>
+    <div class="stat-card"><div class="stat-label">Expiring This Week</div><div class="stat-val c-amber">${expThisWeek}</div></div>
+    <div class="stat-card"><div class="stat-label">Expiring in 15 Days</div><div class="stat-val c-blue">${dueStudents.length}</div></div>
+  `;
+
+  document.getElementById('dues-body').innerHTML = dueStudents.length
+    ? dueStudents.map(s => {
+        const days = Math.ceil((new Date(s['Membership End Date']) - today) / 86400000);
+        const c = days < 0 ? 'c-red' : days <= 3 ? 'c-red' : days <= 7 ? 'c-amber' : '';
+        const bal = allFees.filter(f => f['Admission ID'] === s['Admission ID']).reduce((sum,f) => sum + (parseFloat(f['Balance Amount'])||0), 0);
+        const msg = `Dear ${s.Name},\nYour Study Hall membership will expire on ${s['Membership End Date']}. Please renew to continue your access.\nNIC Academy - 8901989999`;
+        return `<tr>
+          <td><strong>${s.Name}</strong></td>
+          <td>${s['Parent Mobile']}</td>
+          <td>${s['Joined For']}</td>
+          <td class="${c}">${s['Membership End Date']}</td>
+          <td class="${bal > 0 ? 'c-red' : ''}">${bal > 0 ? '₹'+fmt(bal) : '—'}</td>
+          <td class="${c}">${days < 0 ? 'Expired' : days + ' days'}</td>
+          <td><a href="https://wa.me/91${s['Parent Mobile']}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success">📲 WhatsApp</a></td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">No dues in next 15 days 🎉</td></tr>';
+}
+
+function bulkWhatsApp() {
+  toast('Opening WhatsApp for bulk messages — use the WhatsApp page for batch sending');
+  showPage('whatsapp', document.querySelector('.nav-btn:last-child'));
+}
+
+// ── Payments ──────────────────────────────────────────────────
+function loadPayments() {
+  const from = document.getElementById('pay-from').value;
+  const to = document.getElementById('pay-to').value;
+  const mode = document.getElementById('pay-mode').value;
+  const filtered = allFees.filter(f => {
+    const d = (f['Date & Time'] || '').toString().substring(0, 10);
+    return (!from || d >= from) && (!to || d <= to) && (!mode || f['Payment Mode'] === mode);
+  });
+  const total = filtered.reduce((s,f) => s + (parseFloat(f['Amount Paid'])||0), 0);
+  const balance = filtered.reduce((s,f) => s + (parseFloat(f['Balance Amount'])||0), 0);
+  document.getElementById('pay-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Transactions</div><div class="stat-val">${filtered.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Total Collected</div><div class="stat-val c-green">₹${fmt(total)}</div></div>
+    <div class="stat-card"><div class="stat-label">Balance Pending</div><div class="stat-val c-red">₹${fmt(balance)}</div></div>
+    <div class="stat-card"><div class="stat-label">Net</div><div class="stat-val c-blue">₹${fmt(total)}</div></div>
+  `;
+  renderPaymentsTable(filtered);
+}
+
+function renderPaymentsTable(data) {
+  document.getElementById('pay-body').innerHTML = data.length
+    ? data.map(f => `<tr>
+        <td style="color:var(--blue);font-weight:500">${f['Receipt Number']}</td>
+        <td>${f['Date & Time']}</td><td>${f['Student Name']}</td>
+        <td>${f['Joined For']}</td><td>${f.Package}</td>
+        <td>₹${fmt(f['Total Fee'])}</td><td style="color:var(--green)">₹${fmt(f['Amount Paid'])}</td>
+        <td style="color:${f['Balance Amount']>0?'var(--red)':'var(--muted)'}">₹${fmt(f['Balance Amount'])}</td>
+        <td>${f['Payment Mode']}</td>
+      </tr>`).join('')
+    : '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">No transactions found</td></tr>';
+}
+
+// ── Study Hall ────────────────────────────────────────────────
+function renderCabins(data) {
+  const counts = {Available:0,Occupied:0,Reserved:0,Maintenance:0};
+  data.forEach(c => counts[c.Status] = (counts[c.Status]||0) + 1);
+  document.getElementById('sh-stats').innerHTML = Object.entries(counts).map(([k,v]) =>
+    `<div class="stat-card"><div class="stat-label">${k}</div><div class="stat-val ${k==='Available'?'c-green':k==='Occupied'?'c-amber':k==='Maintenance'?'c-red':''}">${v}</div></div>`
+  ).join('');
+  document.getElementById('cabin-map').innerHTML = data.map(c =>
+    `<div class="cabin-tile ${c.Status.toLowerCase()}" title="${c['Cabin ID']} – ${c.Status}">
+      <div class="cabin-num">${c['Cabin ID']}</div>
+      <div style="font-size:10px">${c['AC / Non-AC']||''}</div>
+      <div style="font-size:10px">${c.Status}</div>
+    </div>`).join('');
+  document.getElementById('cabin-body').innerHTML = data.map(c => `
+    <tr>
+      <td style="font-weight:600">${c['Cabin ID']}</td>
+      <td>${c['AC / Non-AC']||''}</td>
+      <td><span class="pill pill-${c.Status.toLowerCase()}">${c.Status}</span></td>
+      <td>${c['Current Student Admission ID']||'—'}</td>
+      <td>${c['Allocated Since']||'—'}</td>
+      <td>${c.Notes||'—'}</td>
+      <td>
+        <select onchange="updateCabinStatus('${c['Cabin ID']}',this.value)" style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:6px">
+          ${['Available','Occupied','Reserved','Maintenance'].map(s => `<option ${c.Status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+    </tr>`).join('');
+}
+
+async function updateCabinStatus(id, status) {
+  try {
+    await api('updateCabin', { id, data: { Status: status, 'Current Student Admission ID': status === 'Available' ? '' : undefined } });
+    toast('Cabin ' + id + ' updated to ' + status);
+    allCabins = await api('getCabins');
+    renderCabins(allCabins);
+  } catch(e) { toast(e.message, true); }
+}
+
+// ── Expenses ──────────────────────────────────────────────────
+function renderExpenses(data) {
+  document.getElementById('exp-body').innerHTML = data.length
+    ? data.map(e => `<tr>
+        <td style="color:var(--muted);font-size:11px">${e['Expense ID']}</td>
+        <td>${e.Date}</td><td>${e.Category}</td><td>${e.Description||'—'}</td>
+        <td style="font-weight:500">₹${fmt(e.Amount)}</td>
+        <td>${e['Paid By']||'—'}</td>
+        <td><button class="btn btn-sm btn-danger" onclick="deleteExpense('${e['Expense ID']}')">🗑</button></td>
+      </tr>`).join('')
+    : '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">No expenses recorded</td></tr>';
+  renderExpBreakdown(data);
+}
+
+function renderExpBreakdown(data) {
+  const thisMonth = todayStr().substring(0, 7);
+  const monthly = data.filter(e => e.Date && e.Date.startsWith(thisMonth));
+  const cats = {};
+  monthly.forEach(e => cats[e.Category] = (cats[e.Category]||0) + (parseFloat(e.Amount)||0));
+  const total = Object.values(cats).reduce((a,b) => a+b, 0);
+  document.getElementById('exp-breakdown').innerHTML = total === 0
+    ? '<div style="color:var(--muted);font-size:13px">No expenses this month</div>'
+    : Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([cat,amt]) => `
+        <div class="prog-row">
+          <div class="pr-head"><span>${cat}</span><span style="font-weight:500">₹${fmt(amt)}</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:${Math.round(amt/total*100)}%;background:var(--blue)"></div></div>
+        </div>`).join('') + `<div style="border-top:1px solid var(--border);margin-top:10px;padding-top:8px;font-size:13px;font-weight:600">Total: ₹${fmt(total)}</div>`;
+}
+
+async function saveExpense() {
+  const date = v('exp-date'), cat = v('exp-cat'), amount = v('exp-amount');
+  if (!date || !cat || !amount) return toast('Date, category and amount are required', true);
+  try {
+    await api('addExpense', { date, category: cat, description: v('exp-desc'), amount: parseFloat(amount), paidBy: v('exp-by') });
+    toast('Expense saved!');
+    ['exp-date','exp-desc','exp-amount'].forEach(id => document.getElementById(id).value = '');
+    allExpenses = await api('getExpenses');
+    renderExpenses(allExpenses);
+  } catch(e) { toast(e.message, true); }
+}
+
+async function deleteExpense(id) {
+  if (!confirm('Delete this expense?')) return;
+  try {
+    await api('deleteExpense', { id });
+    toast('Expense deleted');
+    allExpenses = await api('getExpenses');
+    renderExpenses(allExpenses);
+  } catch(e) { toast(e.message, true); }
+}
+
+// ── Reports ───────────────────────────────────────────────────
+function updateReportDates() {
+  const p = document.getElementById('rpt-period').value;
+  const fromEl = document.getElementById('rpt-from');
+  const toEl = document.getElementById('rpt-to');
+  const isCustom = p === 'custom';
+  fromEl.style.display = isCustom ? '' : 'none';
+  toEl.style.display = isCustom ? '' : 'none';
+  if (!isCustom) {
+    const now = new Date(), y = now.getFullYear(), m = now.getMonth();
+    if (p === 'month') { fromEl.value = `${y}-${String(m+1).padStart(2,'0')}-01`; toEl.value = todayStr(); }
+    else if (p === 'week') { const d = new Date(now); d.setDate(d.getDate()-6); fromEl.value = d.toISOString().slice(0,10); toEl.value = todayStr(); }
+    else if (p === 'quarter') { const qm = Math.floor(m/3)*3; fromEl.value = `${y}-${String(qm+1).padStart(2,'0')}-01`; toEl.value = todayStr(); }
+    else if (p === 'year') { fromEl.value = `${y}-01-01`; toEl.value = todayStr(); }
+  }
+}
+
+async function loadReport() {
+  const from = document.getElementById('rpt-from').value;
+  const to = document.getElementById('rpt-to').value;
+  try {
+    const res = await api('getReport', { type: 'custom', from, to });
+    document.getElementById('rpt-summary').innerHTML = `
+      <div class="stat-card"><div class="stat-label">Total Income</div><div class="stat-val c-green">₹${fmt(res.income)}</div></div>
+      <div class="stat-card"><div class="stat-label">Total Expenses</div><div class="stat-val c-red">₹${fmt(res.expense)}</div></div>
+      <div class="stat-card"><div class="stat-label">Net Profit</div><div class="stat-val ${res.profit>=0?'c-green':'c-red'}">₹${fmt(res.profit)}</div></div>
+    `;
+    // Chart
+    const maxV = Math.max(res.income, res.expense, 1);
+    document.getElementById('rpt-chart').innerHTML = `
+      <div class="bar-group" style="max-width:120px">
+        <div class="bar income" style="height:${Math.round(res.income/maxV*100)}%;flex:1"></div>
+        <div class="bar exp" style="height:${Math.round(res.expense/maxV*100)}%;flex:1"></div>
+      </div>`;
+    // Payment modes
+    const modes = {};
+    (res.fees||[]).forEach(f => modes[f['Payment Mode']] = (modes[f['Payment Mode']]||0) + (parseFloat(f['Amount Paid'])||0));
+    const mTotal = Object.values(modes).reduce((a,b)=>a+b,0)||1;
+    document.getElementById('rpt-modes').innerHTML = Object.entries(modes).map(([mode,amt]) => `
+      <div class="prog-row">
+        <div class="pr-head"><span>${mode}</span><span>₹${fmt(amt)}</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:${Math.round(amt/mTotal*100)}%;background:var(--blue)"></div></div>
+      </div>`).join('') || '<div style="color:var(--muted)">No data</div>';
+    // Transactions
+    document.getElementById('rpt-body').innerHTML = (res.fees||[]).map(f => `<tr>
+      <td>${f['Receipt Number']}</td><td>${f['Date & Time']}</td><td>${f['Student Name']}</td>
+      <td>${f['Joined For']}</td><td>${f.Package}</td>
+      <td style="color:var(--green);font-weight:500">₹${fmt(f['Amount Paid'])}</td>
+      <td>${f['Payment Mode']}</td>
+    </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">No transactions</td></tr>';
+  } catch(e) { toast(e.message, true); }
+}
+
+function printReport() { window.print(); }
+
+// ── WhatsApp ──────────────────────────────────────────────────
+const WA_TEMPLATES = {
+  'Fee Reminder': 'Dear [Student Name],\nYour fee of ₹[Amount] is pending.\nKindly make payment on or before [Due Date].\nNIC Academy Contact: 8901989999',
+  'Admission Confirmation': 'Dear [Student Name],\nYour admission to NIC Academy is confirmed.\nAdmission ID: [ID]\nWelcome aboard! 🎉\nNIC Academy',
+  'Membership Renewal': 'Dear [Student Name],\nYour Study Hall membership will expire on [Date].\nPlease renew to continue your access.\nNIC Academy',
+  'Exam Wishes': 'Dear [Student Name],\nWishing you the very best for your [Exam] exam! 🌟\nYou have worked hard and we are proud of you.\nNIC Academy',
+  'Holiday Notice': 'Dear Students,\nNIC Academy will be closed on [Date] on account of [Holiday].\nWe will resume from [Resume Date].\nNIC Academy',
+  'New Batch Announcement': 'Dear [Student Name],\nA new batch for [Course] is starting from [Date].\nSeats are limited. Register now!\nNIC Academy | 8901989999',
+  'Mock Exam Notification': 'Dear [Student Name],\nMock Exam is scheduled on [Date] at [Time].\nPlease be present 15 mins early.\nNIC Academy',
+  'Study Tips': 'Dear [Student Name],\n📚 Study Tip of the Day:\n[Tip]\nKeep going! All the best.\nNIC Academy'
+};
+
+function loadWATemplate() {
+  const cat = document.getElementById('wa-cat').value;
+  document.getElementById('wa-msg').value = WA_TEMPLATES[cat] || '';
+}
+
+function populateWAStudents() {
+  const sel = document.getElementById('wa-student');
+  sel.innerHTML = '<option value="">-- select student --</option>' +
+    allStudents.map(s => `<option value="${s['Parent Mobile']}" data-name="${s.Name}">${s.Name} (${s['Parent Mobile']})</option>`).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('wa-to').addEventListener('change', function() {
+    document.getElementById('wa-student-wrap').style.display = this.value === 'individual' ? '' : 'none';
+  });
+  loadWATemplate();
+});
+
+function sendWhatsApp() {
+  const toType = v('wa-to');
+  const msg = v('wa-msg');
+  if (!msg) return toast('Please write a message', true);
+  if (toType === 'individual') {
+    const sel = document.getElementById('wa-student');
+    const phone = sel.value;
+    if (!phone) return toast('Please select a student', true);
+    window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+  } else {
+    let nums = allStudents;
+    if (toType === 'studyhall') nums = nums.filter(s => s['Joined For'] === 'Study Hall');
+    if (toType === 'tutorial') nums = nums.filter(s => s['Joined For'] === 'Tutorial');
+    if (nums.length === 0) return toast('No students found', true);
+    const phone = nums[0]['Parent Mobile'];
+    window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+    if (nums.length > 1) toast(`Opening WhatsApp for first student. Repeat for remaining ${nums.length-1} students.`);
+  }
+}
+
+function renderWATemplates() {
+  document.getElementById('wa-templates').innerHTML = Object.entries(WA_TEMPLATES).map(([name, msg]) => `
+    <div class="wa-box" onclick="document.getElementById('wa-cat').value='${name}';document.getElementById('wa-msg').value='${msg.replace(/'/g,"\\'")}'" style="cursor:pointer">
+      <strong>${name}</strong>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">${msg.substring(0,80)}...</div>
+    </div>`).join('');
+}
+
+// ── Utils ─────────────────────────────────────────────────────
+function v(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+function fmt(n) { return (parseFloat(n)||0).toLocaleString('en-IN'); }
+function todayStr() { return new Date().toISOString().split('T')[0]; }
+function pillClass(s) {
+  return {New:'new',Interested:'interested',Joined:'joined','Not Interested':'notint',
+    Available:'available',Occupied:'occupied',Reserved:'reserved',Maintenance:'maintenance',
+    Paid:'paid',Due:'due',Active:'active'}[s] || 'new';
+}
+
+function exportTableCSV(tableId, filename) {
+  const rows = document.querySelectorAll('#' + tableId + ' tr');
+  const csv = Array.from(rows).map(r =>
+    Array.from(r.querySelectorAll('th,td')).map(c => '"' + (c.textContent||'').replace(/"/g,'""').trim() + '"').join(',')
+  ).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = filename + '_' + todayStr() + '.csv'; a.click();
+}
+
+// ── Init ──────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  document.getElementById('adm-id').value = 'Auto-generated on save';
+  document.getElementById('enq-date').value = todayStr();
+  document.getElementById('fee-start').value = todayStr();
+  document.getElementById('exp-date').value = todayStr();
+  updateReportDates();
+  renderWATemplates();
+  loadWATemplate();
+});
+</script>
+</body>
+</html>

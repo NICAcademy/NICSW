@@ -153,7 +153,15 @@ tbody tr:hover td{background:#faf9f7}
 .dot{width:8px;height:8px;border-radius:2px}
 
 /* ── Print ── */
-@media print{#login-screen,#app>.topbar,#app>.content .toolbar,.btn-row,.topbar-nav,.topbar-right{display:none!important}.receipt{box-shadow:none;border:none}}
+@media print {
+  body * { visibility: hidden; }
+  #receipt-card, #receipt-card * { visibility: visible; }
+  #receipt-card {
+    position: fixed; left: 0; top: 0;
+    width: 100%; padding: 30px;
+    background: #fff;
+  }
+}
 
 /* ── Progress Bar ── */
 .prog-row{margin-bottom:10px}
@@ -161,6 +169,8 @@ tbody tr:hover td{background:#faf9f7}
 .prog-bar{background:var(--bg);border-radius:4px;height:6px}
 .prog-fill{height:6px;border-radius:4px}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -957,26 +967,95 @@ async function generateReceipt() {
   } catch(e) { toast(e.message, true); }
 }
 
+// Store last receipt data globally for PDF generation
+let lastReceiptData = null;
+
 function showReceiptPreview(r) {
+  lastReceiptData = r;
   document.getElementById('receipt-preview').innerHTML = `
-    <div class="receipt">
+    <div id="receipt-card" class="receipt">
       <div class="receipt-hdr">
-        <h2>🏫 NIC Academy</h2>
-        <div style="font-size:12px;color:var(--muted)">Study Hall &amp; Tutorial Centre | Ph: 8901989999</div>
-        <div style="margin-top:8px;font-size:11px;color:var(--muted)">Receipt: <strong>${r.receiptNo}</strong> | ${r.dateTime}</div>
+        <h2 style="font-size:20px;font-weight:700;color:#185FA5">🏫 NIC Academy</h2>
+        <div style="font-size:12px;color:#666">Study Hall &amp; Tutorial Centre</div>
+        <div style="font-size:12px;color:#666">Ph: 8901989999</div>
+        <div style="margin-top:8px;font-size:11px;color:#888;border-top:1px dashed #ddd;padding-top:8px">
+          Receipt No: <strong>${r.receiptNo}</strong> &nbsp;|&nbsp; ${r.dateTime}
+        </div>
       </div>
-      ${rrow('Student',r.studentName)}${rrow('Admission ID',r.admissionId)}${rrow('Mobile',r.mobile)}
-      ${rrow('Joined For',r.joinedFor)}${rrow('Package',r.package)}${rrow('Cabin',r.cabinId||'N/A')}
-      ${rrow('Validity',r.startDate + ' to ' + r.endDate)}${rrow('Payment Mode',r.paymentMode)}
-      ${r.transactionRef ? rrow('Ref No.',r.transactionRef) : ''}
-      <div class="receipt-total">
-        ${rrow('Total Fee','₹'+fmt(r.totalFee))}${rrow('Amount Paid','₹'+fmt(r.amountPaid))}
-        <div class="receipt-row"><span class="lbl">Balance</span><span style="color:${r.balanceAmount>0?'var(--red)':'var(--green'})">₹${fmt(r.balanceAmount)}</span></div>
+      ${rrow('Student Name', r.studentName)}
+      ${rrow('Admission ID', r.admissionId)}
+      ${rrow('Mobile', r.mobile)}
+      ${rrow('Joined For', r.joinedFor)}
+      ${rrow('Package', r.package)}
+      ${rrow('Cabin', r.cabinId || 'N/A')}
+      ${rrow('Validity', (r.startDate || '') + ' to ' + (r.endDate || ''))}
+      ${rrow('Payment Mode', r.paymentMode)}
+      ${r.transactionRef ? rrow('Ref No.', r.transactionRef) : ''}
+      <div style="border-top:1px solid #ddd;margin-top:10px;padding-top:10px">
+        ${rrow('Total Fee', '₹' + fmt(r.totalFee))}
+        ${rrow('Amount Paid', '₹' + fmt(r.amountPaid))}
+        <div class="receipt-row receipt-total">
+          <span class="lbl">Balance Due</span>
+          <span style="color:${r.balanceAmount > 0 ? '#A32D2D' : '#2d7a0f'};font-size:16px">₹${fmt(r.balanceAmount)}</span>
+        </div>
       </div>
-      <div class="receipt-foot">Received by: ${r.receivedBy} | Thank you!<br><br>
-        <button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print Receipt</button>
+      <div class="receipt-foot">
+        Received by: <strong>${r.receivedBy}</strong><br>
+        <span style="font-size:10px;color:#aaa">Thank you for choosing NIC Academy!</span>
       </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="downloadReceiptPDF()">⬇ Download PDF</button>
+      <button class="btn btn-success" onclick="sendReceiptViaWhatsApp()">📲 Send on WhatsApp</button>
+      <button class="btn" onclick="window.print()">🖨 Print</button>
+    </div>
+    <div id="wa-instructions" style="display:none;margin-top:10px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:12px;font-size:13px">
+      <strong>📲 Steps to send PDF on WhatsApp:</strong><br>
+      1. Click <strong>"⬇ Download PDF"</strong> above — the receipt PDF will download.<br>
+      2. WhatsApp Web is opening with <strong>${r.mobile}</strong>...<br>
+      3. In WhatsApp, click the 📎 attachment icon → select the downloaded PDF → Send.
     </div>`;
+}
+
+// ── Download Receipt as PDF ───────────────────────────────────
+async function downloadReceiptPDF() {
+  const el = document.getElementById('receipt-card');
+  if (!el) return toast('No receipt to download', true);
+  try {
+    toast('Generating PDF...');
+    const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5' });
+    const pdfW = pdf.internal.pageSize.getWidth();
+    const pdfH = (canvas.height * pdfW) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfW, pdfH);
+    const filename = 'NIC_Receipt_' + (lastReceiptData ? lastReceiptData.receiptNo : 'Receipt') + '.pdf';
+    pdf.save(filename);
+    toast('PDF downloaded: ' + filename);
+    return filename;
+  } catch(e) {
+    toast('PDF error: ' + e.message, true);
+  }
+}
+
+// ── Send Receipt via WhatsApp ─────────────────────────────────
+async function sendReceiptViaWhatsApp() {
+  if (!lastReceiptData) return toast('Generate a receipt first', true);
+
+  // Step 1: Download the PDF
+  await downloadReceiptPDF();
+
+  // Step 2: Show instructions
+  document.getElementById('wa-instructions').style.display = 'block';
+
+  // Step 3: Open WhatsApp Web with student number after short delay
+  const phone = '91' + lastReceiptData.mobile.replace(/\D/g,'');
+  const msg = `Dear ${lastReceiptData.studentName},\n\nPlease find your fee receipt attached.\n\nReceipt No: ${lastReceiptData.receiptNo}\nAmount Paid: ₹${fmt(lastReceiptData.amountPaid)}\nValid: ${lastReceiptData.startDate} to ${lastReceiptData.endDate}\n\nThank you!\nNIC Academy\n8901989999`;
+
+  setTimeout(() => {
+    window.open('https://web.whatsapp.com/send?phone=' + phone + '&text=' + encodeURIComponent(msg), '_blank');
+  }, 1500);
 }
 
 function rrow(l, v) { return `<div class="receipt-row"><span class="lbl">${l}</span><span>${v}</span></div>`; }

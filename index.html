@@ -195,9 +195,11 @@ tbody tr:hover td{background:#faf9f7}
 
 /* PRINT */
 @media print{
+  @page{margin:8mm}
+  html,body{height:auto!important;overflow:visible!important}
   body *{visibility:hidden}
   #receipt-card,#receipt-card *{visibility:visible}
-  #receipt-card{position:fixed;left:0;top:0;width:100%;padding:20px;background:#fff}
+  #receipt-card{position:absolute;left:0;top:0;width:100%;max-width:100%;padding:10px;background:#fff;box-shadow:none;border:none}
 }
 
 /* ═══════════════ RESPONSIVE ═══════════════ */
@@ -870,6 +872,11 @@ function toast(msg,isErr=false){
 // ── HELPERS ───────────────────────────────────────────────────
 function v(id){const e=document.getElementById(id);return e?e.value.trim():'';}
 function fmt(n){return(parseFloat(n)||0).toLocaleString('en-IN');}
+function fmtDateTime(d){
+  d=d?new Date(d):new Date();
+  const p=x=>String(x).padStart(2,'0');
+  return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
 function todayStr(){return new Date().toISOString().split('T')[0];}
 function safe(val){return (val===undefined||val===null||val==='undefined'||val==='null')?'':String(val);}
 function pillClass(s){
@@ -1208,7 +1215,7 @@ async function generateReceipt(){
     const res=await api('addFee',body);
     toast('Receipt: '+res.receipt);
     allFees=await api('getFees');renderPaymentsTable(allFees);
-    showReceiptPreview({...body,receiptNo:res.receipt,dateTime:new Date().toLocaleString('en-IN')});
+    showReceiptPreview({...body,receiptNo:res.receipt,dateTime:fmtDateTime()});
   }catch(e){toast(e.message,true);}
 }
 
@@ -1224,8 +1231,9 @@ function showReceiptPreview(r){
         <div style="font-size:11px;color:#555">Shilpa Nagar, Nagaram, Hyderabad,</div>
         <div style="font-size:11px;color:#555">Secunderabad, Telangana 500083</div>
         <div style="font-size:11px;color:#555;margin-top:2px">📞 8901989999</div>
-        <div style="margin-top:8px;background:#f5f9f5;border-radius:6px;padding:5px 10px;display:inline-block;font-size:11px">
-          Receipt: <strong style="color:#1a4a2e">${safe(r.receiptNo)}</strong> &nbsp;|&nbsp; ${safe(r.dateTime)}
+        <div style="margin-top:8px;background:#f5f9f5;border-radius:6px;padding:7px 10px;display:inline-block">
+          <div style="font-size:11px;color:#555">Receipt: <strong style="color:#1a4a2e">${safe(r.receiptNo)}</strong></div>
+          <div style="font-size:18px;font-weight:700;color:#1a4a2e;letter-spacing:.5px;margin-top:3px">${safe(r.dateTime)}</div>
         </div>
       </div>
       <div style="background:#f9f9f7;border-radius:6px;padding:9px 12px;margin-bottom:9px">
@@ -1252,6 +1260,16 @@ function showReceiptPreview(r){
         Received by: <strong style="color:#333">${safe(r.receivedBy)}</strong><br>
         <span style="font-size:10px">Computer-generated receipt. Thank you for choosing NIC Academy! 🎓</span>
       </div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #ccc;font-size:10px;color:#555;text-align:left">
+        <strong style="display:block;margin-bottom:4px;color:#333;font-size:11px">Terms &amp; Conditions</strong>
+        <ul style="margin:0;padding-left:14px;line-height:1.5">
+          <li>Fees must be renewed on or before the due date.</li>
+          <li>Fees once paid are non-refundable and non-transferable.</li>
+          <li>Students must maintain discipline, respect staff, and follow all institute rules. Parents are requested to monitor their child's academic progress regularly.</li>
+          <li>Any damage to institute property will be charged to the concerned student/parent.</li>
+          <li>Mobile phones and other electronic gadgets are not allowed during study hours unless permitted.</li>
+        </ul>
+      </div>
     </div>
     <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
       <button class="btn btn-primary" onclick="downloadReceiptPDF()">⬇ Download PDF</button>
@@ -1275,13 +1293,13 @@ async function downloadReceiptPDF(){
   if(!el){toast('No receipt to download',true);return;}
   toast('Generating PDF...');
   try{
-    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#ffffff',useCORS:true,windowWidth:el.scrollWidth,windowHeight:el.scrollHeight});
     const imgData=canvas.toDataURL('image/png');
     const {jsPDF}=window.jspdf;
-    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a5'});
-    const w=pdf.internal.pageSize.getWidth();
-    const h=(canvas.height*w)/canvas.width;
-    pdf.addImage(imgData,'PNG',0,0,w,h);
+    const wMM=el.scrollWidth*0.264583;
+    const hMM=canvas.height*wMM/canvas.width;
+    const pdf=new jsPDF({orientation:hMM>wMM?'portrait':'landscape',unit:'mm',format:[wMM,hMM]});
+    pdf.addImage(imgData,'PNG',0,0,wMM,hMM);
     const fname='NIC_Receipt_'+(lastReceiptData?safe(lastReceiptData.receiptNo):'Receipt')+'.pdf';
     pdf.save(fname);toast('PDF downloaded: '+fname);
     return fname;

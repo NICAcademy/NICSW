@@ -298,16 +298,6 @@ tbody tr:hover td{background:#faf9f7}
       <!-- DASHBOARD -->
       <div id="page-dashboard" class="page active">
         <div id="dash-stats" class="stat-grid"><div class="loading"><span class="spin"></span>Loading...</div></div>
-        <div class="grid2">
-          <div class="card">
-            <div class="card-title">📅 Today's Birthdays</div>
-            <div id="dash-birthdays"><div class="loading"><span class="spin"></span></div></div>
-          </div>
-          <div class="card">
-            <div class="card-title">🔔 Upcoming Renewals (15 days)</div>
-            <div id="dash-renewals"><div class="loading"><span class="spin"></span></div></div>
-          </div>
-        </div>
         <div class="card">
           <div class="card-title">📊 Monthly Income vs Expenses</div>
           <div class="chart-wrap" id="dash-chart"></div>
@@ -456,6 +446,21 @@ tbody tr:hover td{background:#faf9f7}
 
       <!-- STUDENTS -->
       <div id="page-students" class="page">
+        <!-- Birthday & Renewal Info Panels -->
+        <div class="grid3" id="stu-info-panels">
+          <div class="card" id="stu-bday-today">
+            <div class="card-title">🎂 Today's Birthdays</div>
+            <div id="stu-bdays-today-body"><div class="loading"><span class="spin"></span></div></div>
+          </div>
+          <div class="card" id="stu-bday-week">
+            <div class="card-title">📅 This Week's Birthdays</div>
+            <div id="stu-bdays-week-body"><div class="loading"><span class="spin"></span></div></div>
+          </div>
+          <div class="card" id="stu-renewals">
+            <div class="card-title">🔔 Upcoming Renewals (15 Days)</div>
+            <div id="stu-renewals-body"><div class="loading"><span class="spin"></span></div></div>
+          </div>
+        </div>
         <div class="toolbar">
           <div class="search-wrap" style="flex:1"><input type="text" id="stu-search" placeholder="Search by name, ID, mobile..." oninput="filterStudents()"></div>
           <select id="stu-filter" onchange="filterStudents()">
@@ -699,6 +704,69 @@ tbody tr:hover td{background:#faf9f7}
   </div><!-- /app-body -->
 </div><!-- /app -->
 
+<!-- STUDENT EDIT MODAL -->
+<div class="modal-bg" id="stu-edit-modal">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-title">
+      <span>✏️ Edit Student</span>
+      <span class="modal-close" onclick="closeStudentModal()">✕</span>
+    </div>
+    <input type="hidden" id="sedit-id">
+    <div class="form-row">
+      <div class="fg"><label>Admission ID</label><input id="sedit-admid" readonly></div>
+      <div class="fg"><label>Name *</label><input id="sedit-name" placeholder="Student full name"></div>
+    </div>
+    <div class="form-row c3">
+      <div class="fg"><label>Gender</label><select id="sedit-gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+      <div class="fg"><label>Age</label><input type="number" id="sedit-age" min="5" max="60"></div>
+      <div class="fg"><label>Date of Birth</label><input type="date" id="sedit-dob"></div>
+    </div>
+    <div class="section-div">Academic Details</div>
+    <div class="form-row c3">
+      <div class="fg"><label>Class / Education</label><input id="sedit-class" placeholder="e.g. Class 10"></div>
+      <div class="fg"><label>School / College</label><input id="sedit-school"></div>
+      <div class="fg"><label>Board</label><select id="sedit-board"><option>SSC</option><option>CBSE</option><option>ICSE</option><option>Intermediate</option><option>Others</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Exam Preparing For</label><select id="sedit-prep"><option>JEE</option><option>NEET</option><option>EAMCET</option><option>Foundation</option><option>TSPSC</option><option>UPSC</option><option>Others</option><option>N/A</option></select></div>
+      <div class="fg"><label>Medium</label><select id="sedit-medium"><option>Telugu</option><option>English</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Admission Type *</label><select id="sedit-joinedfor"><option>Study Hall</option><option>Tutorial</option><option>Mock Exams</option><option>Library</option></select></div>
+      <div class="fg"><label>Mock Test Required</label><select id="sedit-mock"><option>No</option><option>Yes</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Cabin ID</label><select id="sedit-cabin"><option value="">None</option></select></div>
+      <div class="fg"><label>Membership Start Date</label><input type="date" id="sedit-start"></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Membership End Date</label><input type="date" id="sedit-end"></div>
+      <div class="fg"></div>
+    </div>
+    <div class="section-div">Parent / Guardian Details</div>
+    <div class="form-row">
+      <div class="fg"><label>Parent Name</label><input id="sedit-parent" placeholder="Full name"></div>
+      <div class="fg"><label>Relationship</label><select id="sedit-rel"><option>Father</option><option>Mother</option><option>Guardian</option></select></div>
+    </div>
+    <div class="form-row c3">
+      <div class="fg"><label>Mobile *</label><input type="tel" id="sedit-pmobile" placeholder="Parent mobile"></div>
+      <div class="fg"><label>Alternate Mobile</label><input type="tel" id="sedit-altmobile"></div>
+      <div class="fg"><label>Email</label><input type="email" id="sedit-email"></div>
+    </div>
+    <div class="form-row c1">
+      <div class="fg"><label>Address</label><input id="sedit-address"></div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Referred By</label><input id="sedit-ref"></div>
+      <div class="fg"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveStudentEdit()">💾 Save Changes</button>
+      <button class="btn" onclick="closeStudentModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- CABIN MODAL -->
 <div class="modal-bg" id="cabin-modal">
   <div class="modal">
@@ -728,7 +796,7 @@ tbody tr:hover td{background:#faf9f7}
 
 <script>
 const LOGO_B64 = "Logo.jpg";
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDSgfMja1FzMguAmVy5F2G2qAoTE8PVmf7ycVdAJBcG-yY390fzoBiqsv9Gz2_K9GO/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxQj8vYVp7K4QMGmVRQXeu41F-AQbFt91rxiHDtgyD05_u-PROQordy5iDIz617tb4P/exec';
 
 // ── DATA STORE ────────────────────────────────────────────────
 let allStudents=[], allEnquiries=[], allFees=[], allExpenses=[], allCabins=[];
@@ -825,6 +893,7 @@ async function loadAllData(){
     ]);
     renderEnquiries(allEnquiries);
     renderStudents(allStudents);
+    renderStudentPagePanels();
     renderPaymentsTable(allFees);
     renderExpenses(allExpenses);
     renderCabins(allCabins);
@@ -847,6 +916,7 @@ function showPage(id,el){
   if(id==='reports'){updateReportDates();loadReport();}
   if(id==='payments') loadPayments();
   if(id==='dues') renderDues();
+  if(id==='students') renderStudentPagePanels();
 }
 
 // ── SIDEBAR TOGGLE ────────────────────────────────────────────
@@ -876,6 +946,12 @@ function fmtDateTime(d){
   d=d?new Date(d):new Date();
   const p=x=>String(x).padStart(2,'0');
   return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+function fmtDate(d){
+  d=d?new Date(d):new Date();
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const p=x=>String(x).padStart(2,'0');
+  return `${p(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 function todayStr(){return new Date().toISOString().split('T')[0];}
 function safe(val){return (val===undefined||val===null||val==='undefined'||val==='null')?'':String(val);}
@@ -913,8 +989,6 @@ async function loadDashboard(){
       <div class="stat-card acc-red"><div class="stat-label">Expenses This Month</div><div class="stat-val">₹${fmt(d.monthExpenses)}</div></div>
       <div class="stat-card ${(d.profit||0)>=0?'acc-green':'acc-red'}"><div class="stat-label">Profit This Month</div><div class="stat-val">₹${fmt(d.profit)}</div></div>
     `;
-    renderBirthdays();
-    renderRenewals();
     renderDashChart();
   }catch(e){toast('Dashboard error: '+e.message,true);}
 }
@@ -1129,7 +1203,10 @@ function renderStudents(data){
           <td>${safe(s['Cabin ID'])||'—'}</td>
           <td>${safe(s['Membership End Date'])||'—'}</td>
           <td><span class="pill pill-${active?'active':'expired'}">${active?'Active':'Expired'}</span></td>
-          <td><button class="btn btn-sm btn-danger" onclick="deleteStudent('${safe(s['Admission ID'])}')">🗑</button></td>
+          <td style="display:flex;gap:4px;">
+            <button class="btn btn-sm btn-amber" onclick="openStudentEdit('${safe(s['Admission ID'])}')">✏️</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteStudent('${safe(s['Admission ID'])}')">🗑</button>
+          </td>
         </tr>`;
       }).join('')
     : '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">No students found</td></tr>';
@@ -1215,7 +1292,20 @@ async function generateReceipt(){
     const res=await api('addFee',body);
     toast('Receipt: '+res.receipt);
     allFees=await api('getFees');renderPaymentsTable(allFees);
-    showReceiptPreview({...body,receiptNo:res.receipt,dateTime:fmtDateTime()});
+    const now = new Date();
+    const billDate = fmtDate(now);
+    const billDateTime = fmtDateTime(now);
+    showReceiptPreview({...body,receiptNo:res.receipt,billDate:billDate,dateTime:billDateTime});
+    // Auto-update student Membership End Date when fee receipt generated
+    if(body.endDate && body.admissionId){
+      try{
+        await api('updateStudent',{id:body.admissionId,data:{'Membership End Date':body.endDate,'Membership Start Date':body.startDate}});
+        allStudents=await api('getStudents');
+        renderStudents(allStudents);
+        renderStudentPagePanels();
+        toast('Receipt saved & Valid Until updated to '+body.endDate);
+      }catch(eu){ toast('Receipt saved. End date update: '+eu.message,true); }
+    }
   }catch(e){toast(e.message,true);}
 }
 
@@ -1231,9 +1321,9 @@ function showReceiptPreview(r){
         <div style="font-size:11px;color:#555">Shilpa Nagar, Nagaram, Hyderabad,</div>
         <div style="font-size:11px;color:#555">Secunderabad, Telangana 500083</div>
         <div style="font-size:11px;color:#555;margin-top:2px">📞 8901989999</div>
-        <div style="margin-top:8px;background:#f5f9f5;border-radius:6px;padding:7px 10px;display:inline-block">
-          <div style="font-size:11px;color:#555">Receipt: <strong style="color:#1a4a2e">${safe(r.receiptNo)}</strong></div>
-          <div style="font-size:18px;font-weight:700;color:#1a4a2e;letter-spacing:.5px;margin-top:3px">${safe(r.dateTime)}</div>
+        <div style="margin-top:8px;background:#f5f9f5;border-radius:6px;padding:7px 14px;display:inline-block;text-align:left">
+          <div style="font-size:12px;color:#555;margin-bottom:3px">Receipt No: <strong style="color:#1a4a2e">${safe(r.receiptNo)}</strong></div>
+          <div style="font-size:12px;color:#555">Bill Date: <strong style="color:#1a4a2e">${safe(r.billDate)}</strong></div>
         </div>
       </div>
       <div style="background:#f9f9f7;border-radius:6px;padding:9px 12px;margin-bottom:9px">
@@ -1616,6 +1706,144 @@ function sendWhatsApp(){
     window.open(`https://web.whatsapp.com/send?phone=91${safe(nums[0]['Parent Mobile']).replace(/\D/g,'')}&text=${encodeURIComponent(msg)}`,'_blank');
     if(nums.length>1) toast(`Opened for first student. Repeat for remaining ${nums.length-1}.`);
   }
+}
+
+// ── STUDENT BIRTHDAY & RENEWALS (Students Page) ─────────────
+function renderStudentPagePanels(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayMMDD = todayStr().substring(5);
+
+  // Today's birthdays
+  const todayBdays = allStudents.filter(s=>{
+    const dob=safe(s['Date of Birth']);
+    return dob && dob.length>=7 && dob.substring(5)===todayMMDD;
+  });
+  const bdayTodayEl = document.getElementById('stu-bdays-today-body');
+  if(bdayTodayEl){
+    bdayTodayEl.innerHTML = todayBdays.length
+      ? todayBdays.map(s=>`<div class="bday-card"><div class="bday-icon">🎂</div><div class="bday-info"><div class="bday-name">${safe(s.Name)}</div><div class="bday-meta">${safe(s['Admission ID'])} · ${safe(s['Joined For'])||'—'} · ${safe(s['Parent Mobile'])}</div></div></div>`).join('')
+      : '<div style="color:var(--muted);font-size:13px;padding:8px 0">No birthdays today</div>';
+  }
+
+  // This week's birthdays (next 7 days)
+  const in7 = new Date(today); in7.setDate(in7.getDate()+7);
+  const weekBdays = allStudents.filter(s=>{
+    const dob=safe(s['Date of Birth']);
+    if(!dob||dob.length<7) return false;
+    const thisYear = today.getFullYear();
+    const bdayThis = new Date(thisYear+'-'+dob.substring(5));
+    if(isNaN(bdayThis)) return false;
+    return bdayThis>=today && bdayThis<=in7;
+  });
+  const bdayWeekEl = document.getElementById('stu-bdays-week-body');
+  if(bdayWeekEl){
+    bdayWeekEl.innerHTML = weekBdays.length
+      ? weekBdays.map(s=>{
+          const dob=safe(s['Date of Birth']);
+          const bdayThis = new Date(today.getFullYear()+'-'+dob.substring(5));
+          const days = Math.ceil((bdayThis-today)/86400000);
+          return `<div class="bday-card"><div class="bday-icon">${days===0?'🎂':'🎁'}</div><div class="bday-info"><div class="bday-name">${safe(s.Name)}</div><div class="bday-meta">${safe(s['Admission ID'])} · ${days===0?'Today':'In '+days+'d'} · ${safe(s['Parent Mobile'])}</div></div></div>`;
+        }).join('')
+      : '<div style="color:var(--muted);font-size:13px;padding:8px 0">No birthdays this week</div>';
+  }
+
+  // Upcoming renewals (15 days)
+  const in15 = new Date(today); in15.setDate(in15.getDate()+15);
+  const renewals = allStudents.filter(s=>{
+    const end=new Date(safe(s['Membership End Date']));
+    return !isNaN(end)&&end>=today&&end<=in15;
+  }).sort((a,b)=>new Date(a['Membership End Date'])-new Date(b['Membership End Date']));
+  const renewEl = document.getElementById('stu-renewals-body');
+  if(renewEl){
+    renewEl.innerHTML = renewals.length
+      ? `<div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Type</th><th>Expires</th><th>Days</th></tr></thead><tbody>
+          ${renewals.map(s=>{
+            const days=Math.ceil((new Date(safe(s['Membership End Date']))-today)/86400000);
+            const c=days<=3?'color:var(--red)':days<=7?'color:var(--amber)':'';
+            return `<tr><td>${safe(s.Name)}</td><td>${safe(s['Joined For'])||'—'}</td><td style="${c}">${safe(s['Membership End Date'])}</td><td style="${c}">${days}d</td></tr>`;
+          }).join('')}</tbody></table></div>`
+      : '<div style="color:var(--muted);font-size:13px;padding:8px 0">No renewals in next 15 days ✅</div>';
+  }
+}
+
+// ── STUDENT EDIT MODAL ────────────────────────────────────────
+function populateEditCabinSelect(){
+  const sel=document.getElementById('sedit-cabin');
+  if(!sel) return;
+  sel.innerHTML='<option value="">None</option>'+allCabins.map(c=>`<option value="${safe(c['Cabin ID'])}">${safe(c['Cabin ID'])} (${safe(c['AC / Non-AC'])})</option>`).join('');
+}
+
+function openStudentEdit(admId){
+  const s=allStudents.find(s=>s['Admission ID']===admId);
+  if(!s){toast('Student not found',true);return;}
+  populateEditCabinSelect();
+  document.getElementById('sedit-id').value=admId;
+  document.getElementById('sedit-admid').value=safe(s['Admission ID']);
+  document.getElementById('sedit-name').value=safe(s.Name);
+  document.getElementById('sedit-gender').value=safe(s.Gender)||'Male';
+  document.getElementById('sedit-age').value=safe(s.Age);
+  document.getElementById('sedit-dob').value=safe(s['Date of Birth']);
+  document.getElementById('sedit-class').value=safe(s['Class / Education'])||safe(s.classEducation);
+  document.getElementById('sedit-school').value=safe(s['School Name'])||safe(s.schoolName);
+  document.getElementById('sedit-board').value=safe(s.Board)||'SSC';
+  document.getElementById('sedit-prep').value=safe(s['Exam Preparing For'])||safe(s.preparingFor)||'N/A';
+  document.getElementById('sedit-medium').value=safe(s.Medium)||'Telugu';
+  document.getElementById('sedit-joinedfor').value=safe(s['Joined For'])||safe(s['Admission Type'])||'Study Hall';
+  document.getElementById('sedit-mock').value=safe(s['Mock Test Required'])||safe(s.mockTest)||'No';
+  document.getElementById('sedit-cabin').value=safe(s['Cabin ID']);
+  document.getElementById('sedit-start').value=safe(s['Membership Start Date']);
+  document.getElementById('sedit-end').value=safe(s['Membership End Date']);
+  document.getElementById('sedit-parent').value=safe(s['Parent Name'])||safe(s.parentName);
+  document.getElementById('sedit-rel').value=safe(s.Relationship)||safe(s.relationship)||'Father';
+  document.getElementById('sedit-pmobile').value=safe(s['Parent Mobile'])||safe(s.parentMobile);
+  document.getElementById('sedit-altmobile').value=safe(s['Alternate Mobile'])||safe(s.altMobile);
+  document.getElementById('sedit-email').value=safe(s.Email)||safe(s.email);
+  document.getElementById('sedit-address').value=safe(s.Address)||safe(s.address);
+  document.getElementById('sedit-ref').value=safe(s['Referred By'])||safe(s.referredBy);
+  document.getElementById('stu-edit-modal').classList.add('show');
+}
+
+function closeStudentModal(){
+  document.getElementById('stu-edit-modal').classList.remove('show');
+}
+
+async function saveStudentEdit(){
+  const admId=document.getElementById('sedit-id').value;
+  const name=document.getElementById('sedit-name').value.trim();
+  const pmob=document.getElementById('sedit-pmobile').value.trim();
+  if(!name||!pmob){toast('Name and parent mobile are required',true);return;}
+  const data={
+    'Name':name,
+    'Gender':document.getElementById('sedit-gender').value,
+    'Age':document.getElementById('sedit-age').value,
+    'Date of Birth':document.getElementById('sedit-dob').value,
+    'Class / Education':document.getElementById('sedit-class').value,
+    'School Name':document.getElementById('sedit-school').value,
+    'Board':document.getElementById('sedit-board').value,
+    'Exam Preparing For':document.getElementById('sedit-prep').value,
+    'Medium':document.getElementById('sedit-medium').value,
+    'Joined For':document.getElementById('sedit-joinedfor').value,
+    'Mock Test Required':document.getElementById('sedit-mock').value,
+    'Cabin ID':document.getElementById('sedit-cabin').value,
+    'Membership Start Date':document.getElementById('sedit-start').value,
+    'Membership End Date':document.getElementById('sedit-end').value,
+    'Parent Name':document.getElementById('sedit-parent').value,
+    'Relationship':document.getElementById('sedit-rel').value,
+    'Parent Mobile':pmob,
+    'Alternate Mobile':document.getElementById('sedit-altmobile').value,
+    'Email':document.getElementById('sedit-email').value,
+    'Address':document.getElementById('sedit-address').value,
+    'Referred By':document.getElementById('sedit-ref').value
+  };
+  try{
+    await api('updateStudent',{id:admId,data});
+    toast('Student updated successfully!');
+    closeStudentModal();
+    allStudents=await api('getStudents');
+    renderStudents(allStudents);
+    renderStudentPagePanels();
+    populateWAStudents();
+  }catch(e){toast(e.message,true);}
 }
 
 // ── INIT ─────────────────────────────────────────────────────

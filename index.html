@@ -119,6 +119,7 @@ tbody tr:hover td{background:#faf9f7}
 .pill-joined,.pill-paid,.pill-active,.pill-available{background:#EAF3DE;color:#2d7a0f}
 .pill-notint,.pill-due,.pill-maintenance,.pill-expired{background:#FCEBEB;color:#A32D2D}
 .pill-occupied{background:#FAEEDA;color:#854F0B}.pill-reserved{background:#E6F1FB;color:#185FA5}
+.pill-inactive{background:#EAEAEA;color:#5B5B5B}
 
 /* TOOLBAR */
 .toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
@@ -421,7 +422,7 @@ tbody tr:hover td{background:#faf9f7}
             <div class="fg"><label>Exam Preparing For</label><select id="adm-prep"><option>JEE</option><option>LAWCET</option><option>GATE</option>
 <option>AEE</option><option>SSC & CGL</option><option>TG-SI</option><option>PG (NEET)</option><option>DEO</option><option>BANKING</option><option>PROFESSIONAL WORK</option><option>CA</option><option>RAILWAY</option><option>GROUPS</option><option>LLB</option>
 <option>TSPSC</option><option>NEET</option><option>EAMCET</option><option>Foundation</option><option>TSPSC</option><option>UPSC</option><option>Others</option><option>N/A</option></select></div>
-            <div class="fg"><label>Medium</label><select id="adm-medium"><option>Telugu</option><option>English</option><option>Hindhi</option></select></div>
+            <div class="fg"><label>Medium</label><select id="adm-medium"><option>Telugu</option><option>English</option><option>Hindi</option></select></div>
           </div>
           <div class="form-row">
             <div class="fg"><label>Admission Type *</label><select id="adm-joinedfor"><option>Study Hall</option><option>Tutorial</option><option>Mock Exams</option><option>Library</option></select></div>
@@ -481,6 +482,9 @@ tbody tr:hover td{background:#faf9f7}
           <div class="search-wrap" style="flex:1"><input type="text" id="stu-search" placeholder="Search by name, ID, mobile..." oninput="filterStudents()"></div>
           <select id="stu-filter" onchange="filterStudents()">
             <option value="">All Admission Types</option><option>Study Hall</option><option>Tutorial</option><option>Mock Exams</option>
+          </select>
+          <select id="stu-status-filter" onchange="filterStudents()">
+            <option value="">All Status</option><option value="Active">🟢 Active</option><option value="Expired">🔴 Expired</option><option value="Inactive">⚪ Inactive</option>
           </select>
           <button class="btn" onclick="exportTableCSV('stu-table','Students')">⬇ Export</button>
         </div>
@@ -744,8 +748,21 @@ tbody tr:hover td{background:#faf9f7}
       <div class="fg"><label>Board</label><select id="sedit-board"><option>SSC</option><option>CBSE</option><option>ICSE</option><option>Intermediate</option><option>Others</option></select></div>
     </div>
     <div class="form-row">
-      <div class="fg"><label>Exam Preparing For</label><select id="sedit-prep"><option>JEE</option><option>NEET</option><option>EAMCET</option><option>Foundation</option><option>TSPSC</option><option>UPSC</option><option>Others</option><option>N/A</option></select></div>
-      <div class="fg"><label>Medium</label><select id="sedit-medium"><option>Telugu</option><option>English</option></select></div>
+      <div class="fg"><label>Exam Preparing For</label><select id="sedit-prep"><option>JEE</option><option>NEET</option><option>LAWCET</option>
+<option>GATE</option>
+<option>AEE</option>
+<option>SSC & CGL</option>
+<option>TG-SI</option>
+<option>PG (NEET)</option>
+<option>DEO</option>
+<option>BANKING</option>
+<option>PROFESSIONAL WORK</option>
+<option>CA</option>
+<option>RAILWAY</option>
+<option>GROUPS</option>
+<option>LLB</option>
+<option>TSPSC</option><option>EAMCET</option><option>Foundation</option><option>TSPSC</option><option>UPSC</option><option>Others</option></select></div>
+      <div class="fg"><label>Medium</label><select id="sedit-medium"><option>Telugu</option><option>English</option><option>Hindi</option></select></div>
     </div>
     <div class="form-row">
       <div class="fg"><label>Admission Type *</label><select id="sedit-joinedfor"><option>Study Hall</option><option>Tutorial</option><option>Mock Exams</option><option>Library</option></select></div>
@@ -757,6 +774,14 @@ tbody tr:hover td{background:#faf9f7}
     </div>
     <div class="form-row">
       <div class="fg"><label>Membership End Date</label><input type="date" id="sedit-end"></div>
+      <div class="fg"><label>Student Status</label>
+        <select id="sedit-status" onchange="toggleInactiveReason()"><option>Active</option><option>Inactive</option></select>
+      </div>
+    </div>
+    <div class="form-row" id="sedit-reason-row" style="display:none">
+      <div class="fg"><label>Reason for Inactive</label>
+        <select id="sedit-reason"><option value="">-- select --</option><option>Left Temporarily</option><option>Left Permanently</option><option>Other</option></select>
+      </div>
       <div class="fg"></div>
     </div>
     <div class="section-div">Parent / Guardian Details</div>
@@ -812,7 +837,7 @@ tbody tr:hover td{background:#faf9f7}
 
 <script>
 const LOGO_B64 = "Logo.jpg";
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxQj8vYVp7K4QMGmVRQXeu41F-AQbFt91rxiHDtgyD05_u-PROQordy5iDIz617tb4P/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbymkOg9YFCUk1XTtEKgmOHD-TizQx-rM5zQbZsNiWmiSxUzlhMuLns77xNhgDOFknHM/exec';
 
 // ── DATA STORE ────────────────────────────────────────────────
 let allStudents=[], allEnquiries=[], allFees=[], allExpenses=[], allCabins=[];
@@ -1032,6 +1057,7 @@ function renderRenewals(){
   const today=new Date();today.setHours(0,0,0,0);
   const in15=new Date(today);in15.setDate(in15.getDate()+15);
   const upcoming=allStudents.filter(s=>{
+    if(getStudentStatus(s).cls==='inactive') return false; // skip students who've already left
     const end=new Date(safe(s['Membership End Date']));
     return !isNaN(end)&&end>=today&&end<=in15;
   }).sort((a,b)=>new Date(a['Membership End Date'])-new Date(b['Membership End Date']));
@@ -1204,12 +1230,27 @@ function clearAdmission(){
 }
 
 // ── STUDENTS ──────────────────────────────────────────────────
-function renderStudents(data){
+// Determines a student's effective status.
+// Manual "Student Status" = Inactive always wins (student has left, temporarily or
+// permanently) regardless of whether their membership is still valid.
+// Otherwise status is derived from Membership End Date vs today.
+function getStudentStatus(s){
+  const manual=(safe(s['Student Status'])||'Active').toLowerCase();
+  if(manual==='inactive'){
+    return {label:'Inactive',cls:'inactive',reason:safe(s['Status Reason'])};
+  }
   const today=todayStr();
+  const end=safe(s['Membership End Date']);
+  const isActive=end>=today&&end!=='';
+  return isActive?{label:'Active',cls:'active',reason:''}:{label:'Expired',cls:'expired',reason:''};
+}
+
+function renderStudents(data){
   document.getElementById('stu-body').innerHTML=data.length
     ? data.map(s=>{
         const admType=safe(s['Joined For'])||safe(s['Admission Type'])||'—';
-        const active=safe(s['Membership End Date'])>=today&&safe(s['Membership End Date'])!=='';
+        const st=getStudentStatus(s);
+        const title=st.reason?` title="${st.reason}"`:'';
         return `<tr>
           <td style="font-weight:700;color:var(--green)">${safe(s['Admission ID'])}</td>
           <td>${safe(s.Name)||'—'}</td>
@@ -1218,7 +1259,7 @@ function renderStudents(data){
           <td>${admType}</td>
           <td>${safe(s['Cabin ID'])||'—'}</td>
           <td>${safe(s['Membership End Date'])||'—'}</td>
-          <td><span class="pill pill-${active?'active':'expired'}">${active?'Active':'Expired'}</span></td>
+          <td><span class="pill pill-${st.cls}"${title}>${st.label}</span></td>
           <td style="display:flex;gap:4px;">
             <button class="btn btn-sm btn-amber" onclick="openStudentEdit('${safe(s['Admission ID'])}')">✏️</button>
             <button class="btn btn-sm btn-danger" onclick="deleteStudent('${safe(s['Admission ID'])}')">🗑</button>
@@ -1231,9 +1272,11 @@ function renderStudents(data){
 function filterStudents(){
   const q=v('stu-search').toLowerCase();
   const f=v('stu-filter');
+  const st=v('stu-status-filter');
   renderStudents(allStudents.filter(s=>{
     const type=safe(s['Joined For'])||safe(s['Admission Type']);
-    return (!q||[safe(s['Admission ID']),safe(s.Name),safe(s['Parent Mobile'])].some(val=>val.toLowerCase().includes(q)))&&(!f||type===f);
+    const status=getStudentStatus(s).label;
+    return (!q||[safe(s['Admission ID']),safe(s.Name),safe(s['Parent Mobile'])].some(val=>val.toLowerCase().includes(q)))&&(!f||type===f)&&(!st||status===st);
   }));
 }
 
@@ -1716,7 +1759,7 @@ function sendWhatsApp(){
     if(toType==='tutorial') nums=nums.filter(s=>safe(s['Joined For'])==='Tutorial');
     if(toType==='due'){
       const today=todayStr();
-      nums=nums.filter(s=>safe(s['Membership End Date'])<=today);
+      nums=nums.filter(s=>getStudentStatus(s).cls!=='inactive'&&safe(s['Membership End Date'])<=today);
     }
     if(!nums.length){toast('No students found',true);return;}
     window.open(`https://web.whatsapp.com/send?phone=91${safe(nums[0]['Parent Mobile']).replace(/\D/g,'')}&text=${encodeURIComponent(msg)}`,'_blank');
@@ -1766,6 +1809,7 @@ function renderStudentPagePanels(){
   // Upcoming renewals (15 days)
   const in15 = new Date(today); in15.setDate(in15.getDate()+15);
   const renewals = allStudents.filter(s=>{
+    if(getStudentStatus(s).cls==='inactive') return false; // skip students who've already left
     const end=new Date(safe(s['Membership End Date']));
     return !isNaN(end)&&end>=today&&end<=in15;
   }).sort((a,b)=>new Date(a['Membership End Date'])-new Date(b['Membership End Date']));
@@ -1787,6 +1831,11 @@ function populateEditCabinSelect(){
   const sel=document.getElementById('sedit-cabin');
   if(!sel) return;
   sel.innerHTML='<option value="">None</option>'+allCabins.map(c=>`<option value="${safe(c['Cabin ID'])}">${safe(c['Cabin ID'])} (${safe(c['AC / Non-AC'])})</option>`).join('');
+}
+
+function toggleInactiveReason(){
+  const isInactive=v('sedit-status')==='Inactive';
+  document.getElementById('sedit-reason-row').style.display=isInactive?'':'none';
 }
 
 function openStudentEdit(admId){
@@ -1816,6 +1865,9 @@ function openStudentEdit(admId){
   document.getElementById('sedit-email').value=safe(s.Email)||safe(s.email);
   document.getElementById('sedit-address').value=safe(s.Address)||safe(s.address);
   document.getElementById('sedit-ref').value=safe(s['Referred By'])||safe(s.referredBy);
+  document.getElementById('sedit-status').value=safe(s['Student Status'])||'Active';
+  document.getElementById('sedit-reason').value=safe(s['Status Reason']);
+  toggleInactiveReason();
   document.getElementById('stu-edit-modal').classList.add('show');
 }
 
@@ -1849,7 +1901,9 @@ async function saveStudentEdit(){
     'Alternate Mobile':document.getElementById('sedit-altmobile').value,
     'Email':document.getElementById('sedit-email').value,
     'Address':document.getElementById('sedit-address').value,
-    'Referred By':document.getElementById('sedit-ref').value
+    'Referred By':document.getElementById('sedit-ref').value,
+    'Student Status':document.getElementById('sedit-status').value,
+    'Status Reason':document.getElementById('sedit-status').value==='Inactive'?document.getElementById('sedit-reason').value:''
   };
   try{
     await api('updateStudent',{id:admId,data});

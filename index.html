@@ -17,20 +17,20 @@
   --text:#1a1a18;--muted:#6b6964;--radius:8px;--radius-lg:12px;
   --sidebar-w:220px;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:16px}
 
 /* LOGIN */
 #login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#e8f5e9 0%,#f5f3ef 50%,#e3f0fb 100%);display:flex;align-items:center;justify-content:center;z-index:999}
 .login-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:36px 40px;width:360px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.10)}
 .login-card img{width:140px;height:140px;object-fit:contain;border-radius:12px;margin-bottom:10px}
-.login-card h1{font-size:18px;font-weight:700;color:var(--green);margin-bottom:2px}
-.login-card .sub{font-size:12px;color:var(--muted);margin-bottom:4px}
+.login-card h1{font-size:20px;font-weight:700;color:var(--green);margin-bottom:2px}
+.login-card .sub{font-size:14px;color:var(--muted);margin-bottom:4px}
 .login-card .divider{border-top:1px solid var(--border);margin:14px 0 16px}
-.login-card input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;margin-bottom:12px;outline:none;transition:border .2s}
+.login-card input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:16px;margin-bottom:12px;outline:none;transition:border .2s}
 .login-card input:focus{border-color:var(--green);box-shadow:0 0 0 3px #e8f5e9}
-.login-card button{width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:background .2s}
+.login-card button{width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:background .2s}
 .login-card button:hover{background:#0f2d1c}
-.login-err{color:var(--red);font-size:12px;margin-top:8px;min-height:18px}
+.login-err{color:var(--red);font-size:14px;margin-top:8px;min-height:18px}
 
 /* APP SHELL */
 #app{display:none;height:100vh;flex-direction:column}
@@ -40,12 +40,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .topbar{height:52px;background:var(--green);border-bottom:1px solid #0f2d1c;display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;z-index:100;position:relative}
 .topbar-logo{display:flex;align-items:center;gap:8px;flex-shrink:0;cursor:pointer}
 .topbar-logo img{height:34px;width:34px;object-fit:contain;border-radius:5px;background:#fff;padding:2px}
-.topbar-logo span{font-size:15px;font-weight:700;color:#fff;white-space:nowrap}
-.topbar-logo small{font-size:11px;color:rgba(255,255,255,0.7);margin-left:4px;display:none}
+.topbar-logo span{font-size:16px;font-weight:700;color:#fff;white-space:nowrap}
+.topbar-logo small{font-size:13px;color:rgba(255,255,255,0.7);margin-left:4px;display:none}
 .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px;margin-left:auto}
 .hamburger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
 .topbar-right{margin-left:auto;display:flex;gap:8px;align-items:center}
-.topbar-right button{padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.15);color:#fff;font-weight:500}
+.topbar-right button{padding:5px 12px;border-radius:6px;font-size:14px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.15);color:#fff;font-weight:500}
 .topbar-right button:hover{background:rgba(255,255,255,0.25)}
 
 /* SIDEBAR NAV */
@@ -53,11 +53,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sidebar{width:var(--sidebar-w);background:#fff;border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;transition:transform .3s;z-index:50}
 .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 .nav-section{padding:8px 0}
-.nav-label{font-size:10px;font-weight:700;color:var(--muted);padding:8px 16px 4px;text-transform:uppercase;letter-spacing:.7px}
-.nav-item{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);border-left:3px solid transparent;transition:all .15s;user-select:none}
+.nav-label{font-size:12px;font-weight:700;color:var(--muted);padding:8px 16px 4px;text-transform:uppercase;letter-spacing:.7px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;font-size:15px;font-weight:500;color:var(--muted);border-left:3px solid transparent;transition:all .15s;user-select:none}
 .nav-item:hover{background:var(--bg);color:var(--text)}
 .nav-item.active{background:#e8f5e9;color:var(--green);border-left-color:var(--green);font-weight:600}
-.nav-item .ni{font-size:16px;width:20px;text-align:center}
+.nav-item .ni{font-size:17px;width:20px;text-align:center}
 
 /* CONTENT */
 .main-content{flex:1;overflow-y:auto;padding:20px}
@@ -71,14 +71,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;margin-bottom:20px}
 .stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;position:relative;overflow:hidden}
 .stat-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent,var(--blue))}
-.stat-label{font-size:11px;color:var(--muted);margin-bottom:5px}
-.stat-val{font-size:22px;font-weight:700;color:var(--accent,var(--text))}
-.stat-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.stat-label{font-size:13px;color:var(--muted);margin-bottom:5px}
+.stat-val{font-size:23px;font-weight:700;color:var(--accent,var(--text))}
+.stat-sub{font-size:12px;color:var(--muted);margin-top:2px}
 .acc-blue{--accent:var(--blue)}.acc-green{--accent:var(--green-mid)}.acc-red{--accent:var(--red)}.acc-amber{--accent:var(--amber)}
 
 /* CARDS */
 .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin-bottom:16px}
-.card-title{font-size:14px;font-weight:600;margin-bottom:14px;color:var(--text);display:flex;align-items:center;gap:8px}
+.card-title{font-size:16px;font-weight:600;margin-bottom:14px;color:var(--text);display:flex;align-items:center;gap:8px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
 
@@ -87,34 +87,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .form-row.c1{grid-template-columns:1fr}
 .form-row.c3{grid-template-columns:1fr 1fr 1fr}
 .fg{display:flex;flex-direction:column;gap:4px}
-.fg label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
-.fg input,.fg select,.fg textarea{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);background:#fff;outline:none;width:100%;transition:border .15s}
+.fg label{font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.fg input,.fg select,.fg textarea{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:15px;color:var(--text);background:#fff;outline:none;width:100%;transition:border .15s}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px #e8f5e9}
 .fg input[readonly]{background:var(--bg);color:var(--muted)}
 .fg textarea{resize:vertical;min-height:64px}
-.section-div{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;border-top:1px solid var(--border);padding-top:14px;margin:14px 0 12px;display:flex;align-items:center;gap:8px}
+.section-div{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;border-top:1px solid var(--border);padding-top:14px;margin:14px 0 12px;display:flex;align-items:center;gap:8px}
 
 /* BUTTONS */
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:all .15s;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:all .15s;white-space:nowrap}
 .btn:hover{background:var(--bg)}.btn:disabled{opacity:.5;cursor:not-allowed}
 .btn-primary{background:var(--green);color:#fff;border-color:var(--green)}.btn-primary:hover{background:#0f2d1c}
 .btn-blue{background:var(--blue);color:#fff;border-color:var(--blue)}.btn-blue:hover{background:#0c447c}
 .btn-success{background:var(--green-mid);color:#fff;border-color:var(--green-mid)}.btn-success:hover{background:#1f5a09}
 .btn-danger{background:var(--red);color:#fff;border-color:var(--red)}.btn-danger:hover{background:#7a1f1f}
 .btn-amber{background:var(--amber);color:#fff;border-color:var(--amber)}
-.btn-sm{padding:5px 10px;font-size:11px}
+.btn-sm{padding:5px 10px;font-size:13px}
 
 /* TABLES */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:500px}
-thead th{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--muted);background:var(--bg);white-space:nowrap;position:sticky;top:0}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:500px}
+thead th{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--muted);background:var(--bg);white-space:nowrap;position:sticky;top:0}
 tbody td{padding:9px 12px;border-bottom:1px solid #f0ede8;vertical-align:middle}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:#faf9f7}
 
 /* PILLS */
-.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:13px;font-weight:600}
 .pill-new{background:#E6F1FB;color:#185FA5}.pill-interested{background:#FAEEDA;color:#854F0B}
 .pill-joined,.pill-paid,.pill-active,.pill-available{background:#EAF3DE;color:#2d7a0f}
 .pill-notint,.pill-due,.pill-maintenance,.pill-expired{background:#FCEBEB;color:#A32D2D}
@@ -123,45 +123,45 @@ tbody tr:hover td{background:#faf9f7}
 
 /* TOOLBAR */
 .toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.toolbar input[type=text],.toolbar input[type=date]{padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:#fff;color:var(--text);outline:none;transition:border .15s}
+.toolbar input[type=text],.toolbar input[type=date]{padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:15px;background:#fff;color:var(--text);outline:none;transition:border .15s}
 .toolbar input:focus{border-color:var(--green)}
-.toolbar select{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:#fff;color:var(--text);outline:none}
+.toolbar select{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:15px;background:#fff;color:var(--text);outline:none}
 .search-wrap{flex:1;min-width:180px;position:relative}
 .search-wrap input{width:100%;padding-left:32px}
-.search-wrap::before{content:"🔍";position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:12px;pointer-events:none}
+.search-wrap::before{content:"🔍";position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none}
 
 /* CABIN GRID */
 .cabin-map{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:8px}
-.cabin-tile{border-radius:var(--radius);padding:10px 6px;text-align:center;font-size:12px;cursor:pointer;border:1.5px solid;transition:transform .15s}
+.cabin-tile{border-radius:var(--radius);padding:10px 6px;text-align:center;font-size:14px;cursor:pointer;border:1.5px solid;transition:transform .15s}
 .cabin-tile:hover{transform:scale(1.04)}
 .cabin-tile.available{background:#EAF3DE;border-color:#C0DD97;color:#2d7a0f}
 .cabin-tile.occupied{background:#FAEEDA;border-color:#FAC775;color:#854F0B}
 .cabin-tile.reserved{background:#E6F1FB;border-color:#B5D4F4;color:#185FA5}
 .cabin-tile.maintenance{background:#FCEBEB;border-color:#F7C1C1;color:#A32D2D}
-.cabin-num{font-size:15px;font-weight:700}
+.cabin-num{font-size:16px;font-weight:700}
 
 /* RECEIPT */
-.receipt{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;font-size:13px}
+.receipt{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;font-size:15px}
 .receipt-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dotted #f0ede8}
 .receipt-row:last-child{border-bottom:none}
 .receipt-row .lbl{color:var(--muted);flex-shrink:0;margin-right:10px}
 
 /* WA BOX */
-.wa-box{background:#f0f8f0;border-left:3px solid #25D366;border-radius:0 8px 8px 0;padding:12px;margin-bottom:10px;font-size:13px;cursor:pointer;transition:background .15s}
+.wa-box{background:#f0f8f0;border-left:3px solid #25D366;border-radius:0 8px 8px 0;padding:12px;margin-bottom:10px;font-size:15px;cursor:pointer;transition:background .15s}
 .wa-box:hover{background:#e6f5e6}
 .wa-box strong{display:block;margin-bottom:4px;color:var(--green)}
 
 /* TOAST */
-#toast{position:fixed;bottom:24px;right:24px;background:#1a1a18;color:#fff;padding:12px 18px;border-radius:var(--radius);font-size:13px;display:none;z-index:9999;max-width:320px;box-shadow:0 4px 16px rgba(0,0,0,0.2)}
+#toast{position:fixed;bottom:24px;right:24px;background:#1a1a18;color:#fff;padding:12px 18px;border-radius:var(--radius);font-size:15px;display:none;z-index:9999;max-width:320px;box-shadow:0 4px 16px rgba(0,0,0,0.2)}
 
 /* LOADING */
-.loading{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:15px}
 .spin{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* PROGRESS */
 .prog-row{margin-bottom:10px}
-.prog-row .pr-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.prog-row .pr-head{display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px}
 .prog-bar{background:var(--bg);border-radius:4px;height:7px}
 .prog-fill{height:7px;border-radius:4px;transition:width .5s}
 
@@ -170,37 +170,40 @@ tbody tr:hover td{background:#faf9f7}
 .bar-group{flex:1;display:flex;gap:2px;align-items:flex-end;flex-direction:column;align-items:stretch}
 .bar{border-radius:3px 3px 0 0;min-height:2px;transition:height .4s}
 .bar.income{background:var(--green-mid)}.bar.exp{background:#E24B4A}
-.chart-legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin-top:4px}
+.chart-legend{display:flex;gap:14px;font-size:13px;color:var(--muted);margin-top:4px}
 .chart-legend span{display:flex;align-items:center;gap:4px}
 .dot{width:8px;height:8px;border-radius:2px;display:inline-block}
 
 /* BIRTHDAY CARD */
-.bday-card{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid #f0ede8;font-size:13px}
-.bday-icon{font-size:22px;flex-shrink:0}
-.bday-info{flex:1}.bday-name{font-weight:600}.bday-meta{font-size:11px;color:var(--muted)}
+.bday-card{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid #f0ede8;font-size:15px}
+.bday-icon{font-size:23px;flex-shrink:0}
+.bday-info{flex:1}.bday-name{font-weight:600}.bday-meta{font-size:13px;color:var(--muted)}
 
 /* MODAL */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center}
 .modal-bg.show{display:flex}
 .modal{background:#fff;border-radius:var(--radius-lg);padding:24px;width:90%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,0.15)}
-.modal-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
-.modal-close{cursor:pointer;font-size:20px;color:var(--muted);line-height:1}
+.modal-title{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{cursor:pointer;font-size:21px;color:var(--muted);line-height:1}
 
 /* SEARCHABLE DROPDOWN */
 .dropdown-wrap{position:relative}
 .dropdown-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:var(--radius);max-height:200px;overflow-y:auto;z-index:100;display:none;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
 .dropdown-list.show{display:block}
-.dropdown-item{padding:9px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid #f5f3ef;transition:background .1s}
+.dropdown-item{padding:9px 12px;cursor:pointer;font-size:15px;border-bottom:1px solid #f5f3ef;transition:background .1s}
 .dropdown-item:hover{background:var(--bg)}.dropdown-item:last-child{border-bottom:none}
-.dropdown-item .di-id{font-size:11px;color:var(--muted)}
+.dropdown-item .di-id{font-size:13px;color:var(--muted)}
 
-/* PRINT */
+/* PRINT — uses a generic .print-area class rather than a hard-coded ID so
+   both the fee receipt AND the reports page (or anything else) can be
+   printed correctly. Whichever element gets the .print-area class right
+   before window.print() is the only thing shown on the printed page. */
 @media print{
   @page{margin:8mm}
   html,body{height:auto!important;overflow:visible!important}
   body *{visibility:hidden}
-  #receipt-card,#receipt-card *{visibility:visible}
-  #receipt-card{position:absolute;left:0;top:0;width:100%;max-width:100%;padding:10px;background:#fff;box-shadow:none;border:none}
+  .print-area,.print-area *{visibility:visible}
+  .print-area{position:absolute;left:0;top:0;width:100%;max-width:100%;padding:10px;background:#fff;box-shadow:none;border:none}
 }
 
 /* ═══════════════ RESPONSIVE ═══════════════ */
@@ -215,8 +218,8 @@ tbody tr:hover td{background:#faf9f7}
   .stat-grid{grid-template-columns:repeat(2,1fr)}
   .cabin-map{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}
   .btn-row{gap:6px}
-  .btn{padding:7px 11px;font-size:12px}
-  table{font-size:12px}
+  .btn{padding:7px 11px;font-size:14px}
+  table{font-size:14px}
   thead th,tbody td{padding:7px 8px}
   .modal{width:95%;padding:16px}
   .topbar{padding:0 12px}
@@ -239,7 +242,7 @@ tbody tr:hover td{background:#faf9f7}
     <h1>NIC (Now I Can) Academy</h1>
     <div class="sub">Shilpa Nagar, Nagaram, Hyderabad</div>
     <div class="divider"></div>
-    <p style="font-size:13px;color:#888;margin-bottom:14px">Management System — Secure Login</p>
+    <p style="font-size:14px;color:#888;margin-bottom:14px">Management System — Secure Login</p>
     <input type="text" id="usr-input" placeholder="👤 Enter Username" style="margin-bottom:8px" onkeydown="if(event.key==='Enter')document.getElementById('pwd-input').focus()">
     <input type="password" id="pwd-input" placeholder="🔒 Enter Password" onkeydown="if(event.key==='Enter')doLogin()">
     <button onclick="doLogin()">Login</button>
@@ -259,7 +262,7 @@ tbody tr:hover td{background:#faf9f7}
       <span></span><span></span><span></span>
     </div>
     <div class="topbar-right">
-      <span id="topbar-user" style="font-size:12px;color:#aaa;margin-right:8px"></span>
+      <span id="topbar-user" style="font-size:13px;color:#aaa;margin-right:8px"></span>
       <button onclick="logout()">Logout</button>
     </div>
   </div>
@@ -288,7 +291,6 @@ tbody tr:hover td{background:#faf9f7}
       <div class="nav-section">
         <div class="nav-label">Operations</div>
         <div class="nav-item" onclick="showPage('studyhall',this)"><span class="ni">🏢</span>Study Hall</div>
-        <div class="nav-item" onclick="showPage('whatsapp',this)"><span class="ni">💬</span>WhatsApp</div>
       </div>
     </div>
     <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
@@ -463,21 +465,6 @@ tbody tr:hover td{background:#faf9f7}
 
       <!-- STUDENTS -->
       <div id="page-students" class="page">
-        <!-- Birthday & Renewal Info Panels -->
-        <div class="grid3" id="stu-info-panels">
-          <div class="card" id="stu-bday-today">
-            <div class="card-title">🎂 Today's Birthdays</div>
-            <div id="stu-bdays-today-body"><div class="loading"><span class="spin"></span></div></div>
-          </div>
-          <div class="card" id="stu-bday-week">
-            <div class="card-title">📅 This Week's Birthdays</div>
-            <div id="stu-bdays-week-body"><div class="loading"><span class="spin"></span></div></div>
-          </div>
-          <div class="card" id="stu-renewals">
-            <div class="card-title">🔔 Upcoming Renewals (15 Days)</div>
-            <div id="stu-renewals-body"><div class="loading"><span class="spin"></span></div></div>
-          </div>
-        </div>
         <div class="toolbar">
           <div class="search-wrap" style="flex:1"><input type="text" id="stu-search" placeholder="Search by name, ID, mobile..." oninput="filterStudents()"></div>
           <select id="stu-filter" onchange="filterStudents()">
@@ -491,8 +478,8 @@ tbody tr:hover td{background:#faf9f7}
         <div class="card">
           <div class="tbl-wrap">
             <table id="stu-table">
-              <thead><tr><th>ID</th><th>Name</th><th>Mobile</th><th>Parent Mobile</th><th>Admission Type</th><th>Cabin</th><th>Valid Until</th><th>Status</th><th>Actions</th></tr></thead>
-              <tbody id="stu-body"><tr><td colspan="9" class="loading"><span class="spin"></span>Loading...</td></tr></tbody>
+              <thead><tr><th>ID</th><th>Name</th><th>Mobile</th><th>Parent Mobile</th><th>Admission Type</th><th>Cabin</th><th>Valid Until</th><th>Balance Dues</th><th>Days Left</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="stu-body"><tr><td colspan="11" class="loading"><span class="spin"></span>Loading...</td></tr></tbody>
             </table>
           </div>
         </div>
@@ -510,7 +497,7 @@ tbody tr:hover td{background:#faf9f7}
                 <div class="dropdown-list" id="fee-dropdown"></div>
               </div>
             </div>
-            <div id="fee-student-info" style="display:none;background:#f5f9f5;border:1px solid #c0dd97;border-radius:var(--radius);padding:10px;margin-bottom:12px;font-size:13px"></div>
+            <div id="fee-student-info" style="display:none;background:#f5f9f5;border:1px solid #c0dd97;border-radius:var(--radius);padding:10px;margin-bottom:12px;font-size:14px"></div>
             <div class="form-row">
               <div class="fg"><label>Admission Type</label><select id="fee-for"><option>Study Hall</option><option>Tutorial Classes</option><option>Library</option><option>Mock Exams</option><option>Others</option></select></div>
               <div class="fg"><label>Package</label><select id="fee-pkg"><option>Daily</option><option>Weekly</option><option>10 Days</option><option>Monthly</option><option>Quarterly</option><option>Half-Yearly</option><option>Yearly</option></select></div>
@@ -543,7 +530,6 @@ tbody tr:hover td{background:#faf9f7}
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
             <div class="card-title" style="margin:0">Fee Dues &amp; Expiring Memberships</div>
-            <button class="btn btn-success btn-sm" onclick="showPage('whatsapp',document.querySelectorAll('.nav-item')[10])">📲 Bulk WhatsApp</button>
           </div>
           <div class="tbl-wrap">
             <table>
@@ -552,18 +538,14 @@ tbody tr:hover td{background:#faf9f7}
             </table>
           </div>
         </div>
-        <div class="card">
-          <div class="card-title">📲 WhatsApp Reminder Templates</div>
-          <div class="wa-box"><strong>Template 1 – Fee Reminder</strong>Dear [Student Name],<br>Your fee of ₹[Amount] is pending.<br>Kindly make payment on or before [Due Date].<br>NIC Academy Contact: 8901989999</div>
-          <div class="wa-box"><strong>Template 2 – Membership Renewal</strong>Dear [Student Name],<br>Your Study Hall membership will expire on [Date].<br>Please renew to continue your access.<br>NIC Academy</div>
-        </div>
       </div>
 
       <!-- PAYMENTS -->
       <div id="page-payments" class="page">
         <div class="toolbar">
+          <div class="search-wrap" style="flex:1;min-width:180px"><input type="text" id="pay-search" placeholder="Search by student name or Admission ID..." oninput="loadPayments()"></div>
           <input type="date" id="pay-from">
-          <span style="color:var(--muted);font-size:13px;flex-shrink:0">to</span>
+          <span style="color:var(--muted);font-size:14px;flex-shrink:0">to</span>
           <input type="date" id="pay-to">
           <select id="pay-mode"><option value="">All Modes</option><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option></select>
           <button class="btn btn-primary" onclick="loadPayments()">Filter</button>
@@ -573,12 +555,16 @@ tbody tr:hover td{background:#faf9f7}
         <div class="card">
           <div class="tbl-wrap">
             <table id="pay-table">
-              <thead><tr><th>Receipt No</th><th>Date</th><th>Student</th><th>Admission Type</th><th>Package</th><th>Total</th><th>Paid</th><th>Balance</th><th>Mode</th></tr></thead>
-              <tbody id="pay-body"><tr><td colspan="9" class="loading"><span class="spin"></span>Loading...</td></tr></tbody>
+              <thead><tr><th>Receipt No</th><th>Date</th><th>Admission ID</th><th>Student</th><th>Admission Type</th><th>Package</th><th>Total</th><th>Paid</th><th>Balance</th><th>Mode</th></tr></thead>
+              <tbody id="pay-body"><tr><td colspan="10" class="loading"><span class="spin"></span>Loading...</td></tr></tbody>
             </table>
           </div>
         </div>
       </div>
+      <!-- Complete payment history for a student: every receipt from their
+           joining date to their most recent payment is preserved in the
+           Fees sheet (each receipt appends a new row, nothing is ever
+           overwritten), and is fully browsable/searchable above. -->
 
       <!-- STUDY HALL -->
       <div id="page-studyhall" class="page">
@@ -589,7 +575,7 @@ tbody tr:hover td{background:#faf9f7}
         <div id="sh-stats" class="stat-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))"></div>
         <div class="card">
           <div class="card-title">Cabin Status Map</div>
-          <div style="display:flex;gap:14px;font-size:11px;color:var(--muted);margin-bottom:12px;flex-wrap:wrap">
+          <div style="display:flex;gap:14px;font-size:13px;color:var(--muted);margin-bottom:12px;flex-wrap:wrap">
             <span>🟢 Available</span><span>🟡 Occupied</span><span>🔵 Reserved</span><span>🔴 Maintenance</span>
           </div>
           <div class="cabin-map" id="cabin-map"></div>
@@ -654,68 +640,34 @@ tbody tr:hover td{background:#faf9f7}
           <input type="date" id="rpt-from" style="display:none">
           <input type="date" id="rpt-to" style="display:none">
           <button class="btn btn-primary" onclick="loadReport()">Generate</button>
-          <button class="btn" onclick="window.print()">🖨 Print</button>
+          <button class="btn" onclick="printReport()">🖨 Print</button>
           <button class="btn" onclick="exportTableCSV('rpt-tbl','Report')">⬇ Export</button>
         </div>
-        <div id="rpt-summary" class="grid3"></div>
-        <div class="grid2">
-          <div class="card">
-            <div class="card-title">Income vs Expenses</div>
-            <div class="chart-wrap" id="rpt-chart" style="height:120px"></div>
-            <div class="chart-legend"><span><span class="dot" style="background:var(--green-mid)"></span>Income</span><span><span class="dot" style="background:#E24B4A"></span>Expenses</span></div>
+        <div id="rpt-print-area">
+          <div id="rpt-print-header" style="display:none;margin-bottom:12px">
+            <h2 style="font-size:16px;font-weight:700;color:var(--green)">NIC (Now I Can) Academy — Report</h2>
+            <div id="rpt-print-range" style="font-size:14px;color:var(--muted)"></div>
           </div>
-          <div class="card">
-            <div class="card-title">Payment Mode Breakdown</div>
-            <div id="rpt-modes"></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-title">Fee Transactions</div>
-          <div class="tbl-wrap">
-            <table id="rpt-tbl">
-              <thead><tr><th>Receipt</th><th>Date</th><th>Student</th><th>Admission Type</th><th>Package</th><th>Paid</th><th>Mode</th></tr></thead>
-              <tbody id="rpt-body"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- WHATSAPP -->
-      <div id="page-whatsapp" class="page">
-        <div class="grid2">
-          <div class="card">
-            <div class="card-title">💬 Send Custom Message</div>
-            <div class="fg" style="margin-bottom:10px">
-              <label>Category</label>
-              <select id="wa-cat" onchange="loadWATemplate()">
-                <option>Fee Reminder</option><option>Admission Confirmation</option><option>Membership Renewal</option>
-                <option>Exam Wishes</option><option>Holiday Notice</option><option>New Batch Announcement</option>
-                <option>Mock Exam Notification</option><option>Study Tips</option>
-              </select>
+          <div id="rpt-summary" class="grid3"></div>
+          <div class="grid2">
+            <div class="card">
+              <div class="card-title">Income vs Expenses</div>
+              <div class="chart-wrap" id="rpt-chart" style="height:120px"></div>
+              <div class="chart-legend"><span><span class="dot" style="background:var(--green-mid)"></span>Income</span><span><span class="dot" style="background:#E24B4A"></span>Expenses</span></div>
             </div>
-            <div class="fg" style="margin-bottom:10px">
-              <label>Send To</label>
-              <select id="wa-to" onchange="toggleWAStudent()">
-                <option value="individual">Individual Student</option><option value="all">All Active Students</option>
-                <option value="studyhall">Study Hall Members</option><option value="tutorial">Tutorial Students</option>
-                <option value="due">Fee Due Students</option>
-              </select>
-            </div>
-            <div class="fg" id="wa-student-wrap" style="margin-bottom:10px">
-              <label>Select Student</label>
-              <select id="wa-student"><option value="">-- select student --</option></select>
-            </div>
-            <div class="fg" style="margin-bottom:12px">
-              <label>Message</label>
-              <textarea id="wa-msg" rows="6" placeholder="Type your message..."></textarea>
-            </div>
-            <div class="btn-row">
-              <button class="btn btn-success" onclick="sendWhatsApp()">📲 Open WhatsApp</button>
+            <div class="card">
+              <div class="card-title">Payment Mode Breakdown</div>
+              <div id="rpt-modes"></div>
             </div>
           </div>
           <div class="card">
-            <div class="card-title">📋 Message Templates</div>
-            <div id="wa-templates"></div>
+            <div class="card-title">Fee Transactions</div>
+            <div class="tbl-wrap">
+              <table id="rpt-tbl">
+                <thead><tr><th>Receipt</th><th>Date</th><th>Student</th><th>Admission Type</th><th>Package</th><th>Paid</th><th>Mode</th></tr></thead>
+                <tbody id="rpt-body"></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -837,7 +789,7 @@ tbody tr:hover td{background:#faf9f7}
 
 <script>
 const LOGO_B64 = "Logo.jpg";
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbymkOg9YFCUk1XTtEKgmOHD-TizQx-rM5zQbZsNiWmiSxUzlhMuLns77xNhgDOFknHM/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxWNfpWheN-B1xVQAGdots0-ZoJdE3wkkGRHYDkZUM38AnWHRGq6GfzMZjAnhbfCziy/exec';
 
 // ── DATA STORE ────────────────────────────────────────────────
 let allStudents=[], allEnquiries=[], allFees=[], allExpenses=[], allCabins=[];
@@ -845,6 +797,34 @@ let allStudents=[], allEnquiries=[], allFees=[], allExpenses=[], allCabins=[];
 // ── LOGIN ─────────────────────────────────────────────────────
 // stores current session
 let currentUser = null;
+const SESSION_KEY = 'nic_academy_session';
+
+function saveSession(res){
+  try{ localStorage.setItem(SESSION_KEY, JSON.stringify(res)); }catch(e){}
+}
+function readSession(){
+  try{ return JSON.parse(localStorage.getItem(SESSION_KEY)||'null'); }catch(e){ return null; }
+}
+function clearSession(){
+  try{ localStorage.removeItem(SESSION_KEY); }catch(e){}
+}
+
+// Called on every page load / back-forward navigation. If a saved session
+// exists, the user stays logged in until they explicitly click Logout.
+async function restoreSession(){
+  const saved = readSession();
+  if(!saved || !saved.username) return false;
+  currentUser = saved;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').classList.add('show');
+  document.getElementById('topbar-user').textContent = saved.role + ': ' + saved.username;
+  applyMenuAccess(saved.allowedPages || []);
+  try{
+    await loadAllData();
+    loadDashboard();
+  }catch(e){ toast('Reload error: '+e.message, true); }
+  return true;
+}
 
 async function doLogin(){
   const usr = document.getElementById('usr-input').value.trim();
@@ -854,6 +834,7 @@ async function doLogin(){
   try{
     const res = await api('login', {username: usr, password: pwd});
     currentUser = res; // { username, role, allowedPages }
+    saveSession(res); // persist so refresh / back button keeps the user logged in
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').classList.add('show');
     document.getElementById('login-logo').src = LOGO_B64;
@@ -893,6 +874,7 @@ function applyMenuAccess(allowedPages){
 
 function logout(){
   currentUser = null;
+  clearSession(); // explicit logout is the only thing that ends the session now
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('app').classList.remove('show');
   document.getElementById('usr-input').value='';
@@ -903,7 +885,18 @@ function logout(){
 }
 
 // ── API ───────────────────────────────────────────────────────
+// IMPORTANT: only fall back to the GET request when the POST request itself
+// fails at the network level (e.g. blocked, offline, CORS). If the server
+// responds successfully but with {success:false, error:...} (a genuine
+// application error, such as a bad report date range or a missing sheet),
+// we must surface that error directly instead of silently re-issuing the
+// same failing request as GET and masking what actually went wrong. This
+// previously caused confusing/inconsistent behavior — e.g. Reports
+// appearing to silently fail or double-load.
 async function api(action, body={}){
+  let json = null;
+  let networkError = null;
+
   try{
     const res = await fetch(APPS_SCRIPT_URL,{
       method:'POST',
@@ -912,18 +905,24 @@ async function api(action, body={}){
       redirect:'follow'
     });
     const text = await res.text();
-    const json = JSON.parse(text);
-    if(!json.success) throw new Error(json.error||'API Error');
-    return json.data;
+    json = JSON.parse(text);
   }catch(e){
-    // Fallback GET
-    const url = APPS_SCRIPT_URL+'?payload='+encodeURIComponent(JSON.stringify({action,...body}));
-    const res2 = await fetch(url,{method:'GET',redirect:'follow'});
-    const text2 = await res2.text();
-    const json2 = JSON.parse(text2);
-    if(!json2.success) throw new Error(json2.error||'API Error');
-    return json2.data;
+    networkError = e; // fetch/parse failed outright — try GET fallback below
   }
+
+  if(json === null){
+    try{
+      const url = APPS_SCRIPT_URL+'?payload='+encodeURIComponent(JSON.stringify({action,...body}));
+      const res2 = await fetch(url,{method:'GET',redirect:'follow'});
+      const text2 = await res2.text();
+      json = JSON.parse(text2);
+    }catch(e2){
+      throw new Error('Network error: '+(networkError?networkError.message:e2.message));
+    }
+  }
+
+  if(!json.success) throw new Error(json.error||'API Error');
+  return json.data;
 }
 
 // ── LOAD ALL DATA ────────────────────────────────────────────
@@ -934,12 +933,10 @@ async function loadAllData(){
     ]);
     renderEnquiries(allEnquiries);
     renderStudents(allStudents);
-    renderStudentPagePanels();
     renderPaymentsTable(allFees);
     renderExpenses(allExpenses);
     renderCabins(allCabins);
     renderDues();
-    populateWAStudents();
     populateCabinSelect();
     populateFeeDropdown();
   }catch(e){ toast('Load error: '+e.message,true); }
@@ -957,7 +954,7 @@ function showPage(id,el){
   if(id==='reports'){updateReportDates();loadReport();}
   if(id==='payments') loadPayments();
   if(id==='dues') renderDues();
-  if(id==='students') renderStudentPagePanels();
+  if(id==='students') renderStudents(allStudents);
 }
 
 // ── SIDEBAR TOGGLE ────────────────────────────────────────────
@@ -995,6 +992,27 @@ function fmtDate(d){
   return `${p(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 function todayStr(){return new Date().toISOString().split('T')[0];}
+// Converts an ISO (yyyy-MM-dd) or any parseable date string into DD/MM/YYYY
+// for display. Used throughout the app EXCEPT the Fee Receipt page, which
+// intentionally keeps its own "07 Jul 2026" style (see fmtDate above).
+function fmtDMY(val){
+  const s=safe(val);
+  if(!s) return '—';
+  const d=new Date(s);
+  if(isNaN(d)) return s; // not a parseable date — show as-is rather than hide data
+  const p=x=>String(x).padStart(2,'0');
+  return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()}`;
+}
+// 12-hour clock time, e.g. "02:45 PM" — used on the Fee Receipt to show
+// Bill Time alongside Bill Date.
+function fmtTime(d){
+  d=d?new Date(d):new Date();
+  const p=x=>String(x).padStart(2,'0');
+  let h=d.getHours();
+  const ampm=h>=12?'PM':'AM';
+  h=h%12||12;
+  return `${p(h)}:${p(d.getMinutes())} ${ampm}`;
+}
 function safe(val){return (val===undefined||val===null||val==='undefined'||val==='null')?'':String(val);}
 function pillClass(s){
   const m={New:'new',Interested:'interested',Joined:'joined','Not Interested':'notint',
@@ -1034,43 +1052,6 @@ async function loadDashboard(){
   }catch(e){toast('Dashboard error: '+e.message,true);}
 }
 
-function renderBirthdays(){
-  const today=todayStr();
-  const mmdd=today.substring(5); // MM-DD
-  const bdays=allStudents.filter(s=>{
-    const dob=safe(s['Date of Birth']);
-    return dob && dob.substring(5)===mmdd;
-  });
-  const el=document.getElementById('dash-birthdays');
-  if(!bdays.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:10px 0">🎂 No birthdays today</div>';return;}
-  el.innerHTML=bdays.map(s=>`
-    <div class="bday-card">
-      <div class="bday-icon">🎂</div>
-      <div class="bday-info">
-        <div class="bday-name">${safe(s.Name)||'—'}</div>
-        <div class="bday-meta">${safe(s['Admission ID'])} · ${safe(s['Joined For'])||'—'} · 📞 ${safe(s['Parent Mobile'])||'—'}</div>
-      </div>
-    </div>`).join('');
-}
-
-function renderRenewals(){
-  const today=new Date();today.setHours(0,0,0,0);
-  const in15=new Date(today);in15.setDate(in15.getDate()+15);
-  const upcoming=allStudents.filter(s=>{
-    if(getStudentStatus(s).cls==='inactive') return false; // skip students who've already left
-    const end=new Date(safe(s['Membership End Date']));
-    return !isNaN(end)&&end>=today&&end<=in15;
-  }).sort((a,b)=>new Date(a['Membership End Date'])-new Date(b['Membership End Date']));
-  const el=document.getElementById('dash-renewals');
-  if(!upcoming.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:10px 0">✅ No renewals in next 15 days</div>';return;}
-  el.innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Type</th><th>Expires</th><th>Days</th></tr></thead><tbody>
-    ${upcoming.map(s=>{
-      const days=Math.ceil((new Date(s['Membership End Date'])-today)/86400000);
-      const c=days<=3?'color:var(--red)':days<=7?'color:var(--amber)':'';
-      return `<tr><td>${safe(s.Name)}</td><td>${safe(s['Joined For'])}</td><td style="${c}">${safe(s['Membership End Date'])}</td><td style="${c}">${days}d</td></tr>`;
-    }).join('')}</tbody></table></div>`;
-}
-
 function renderDashChart(){
   const now=new Date(),y=now.getFullYear();
   const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1095,7 +1076,7 @@ function renderDashChart(){
         <div class="bar income" style="height:${Math.round(incArr[i]/maxV*95)}%;flex:1" title="Income ₹${fmt(incArr[i])}"></div>
         <div class="bar exp" style="height:${Math.round(expArr[i]/maxV*95)}%;flex:1" title="Expense ₹${fmt(expArr[i])}"></div>
       </div>
-      <div style="font-size:9px;color:var(--muted)">${lbl}</div>
+      <div style="font-size:11px;color:var(--muted)">${lbl}</div>
     </div>`).join('');
 }
 
@@ -1109,12 +1090,12 @@ function renderEnquiries(data){
     const cls=safe(e['Class (if Tutorial)']);
     const detail=prep?` (${prep})`:cls?` – ${cls}`:'';
     return `<tr>
-      <td>${safe(e['Enquiry Date'])||'—'}</td>
+      <td>${fmtDMY(e['Enquiry Date'])}</td>
       <td><strong>${safe(e.Name)||'—'}</strong></td>
       <td>${safe(e.Mobile)||'—'}</td>
       <td>${at}${detail}</td>
       <td>${safe(e['How Did You Know'])||'—'}</td>
-      <td>${safe(e['Follow-up Date'])||'—'}</td>
+      <td>${e['Follow-up Date']?fmtDMY(e['Follow-up Date']):'—'}</td>
       <td><span class="pill pill-${pillClass(e.Status)}">${safe(e.Status)||'New'}</span></td>
       <td style="display:flex;gap:4px">
         <button class="btn btn-sm" onclick="editEnquiry('${safe(e['Enquiry ID'])}')">✏️</button>
@@ -1221,7 +1202,7 @@ async function saveAdmission(){
     toast('Admission saved! ID: '+res.id);
     document.getElementById('adm-id').value=res.id;
     allStudents=await api('getStudents');allCabins=await api('getCabins');
-    renderStudents(allStudents);renderCabins(allCabins);populateCabinSelect();populateWAStudents();populateFeeDropdown();
+    renderStudents(allStudents);renderCabins(allCabins);populateCabinSelect();populateFeeDropdown();
   }catch(e){toast(e.message,true);}
 }
 function clearAdmission(){
@@ -1246,11 +1227,27 @@ function getStudentStatus(s){
 }
 
 function renderStudents(data){
+  const today=new Date(); today.setHours(0,0,0,0);
   document.getElementById('stu-body').innerHTML=data.length
     ? data.map(s=>{
         const admType=safe(s['Joined For'])||safe(s['Admission Type'])||'—';
         const st=getStudentStatus(s);
         const title=st.reason?` title="${st.reason}"`:'';
+        // Balance Dues: sum of unpaid balance across all fee/payment records for this student.
+        const admId=safe(s['Admission ID']);
+        const balance=(allFees||[]).filter(f=>safe(f['Admission ID'])===admId)
+          .reduce((sum,f)=>sum+(parseFloat(f['Balance Amount'])||0),0);
+        // Days Left: countdown to Membership End Date (negative/"Expired" once past).
+        const endRaw=safe(s['Membership End Date']);
+        const endDate=endRaw?new Date(endRaw):null;
+        let daysLeftHtml='—';
+        if(endDate&&!isNaN(endDate)){
+          const days=Math.ceil((endDate-today)/86400000);
+          if(days<0) daysLeftHtml='<span style="color:var(--red);font-weight:600">Expired</span>';
+          else if(days<=7) daysLeftHtml=`<span style="color:var(--red);font-weight:600">${days}d</span>`;
+          else if(days<=15) daysLeftHtml=`<span style="color:var(--amber);font-weight:600">${days}d</span>`;
+          else daysLeftHtml=`${days}d`;
+        }
         return `<tr>
           <td style="font-weight:700;color:var(--green)">${safe(s['Admission ID'])}</td>
           <td>${safe(s.Name)||'—'}</td>
@@ -1258,7 +1255,9 @@ function renderStudents(data){
           <td>${safe(s['Alternate Mobile'])||'—'}</td>
           <td>${admType}</td>
           <td>${safe(s['Cabin ID'])||'—'}</td>
-          <td>${safe(s['Membership End Date'])||'—'}</td>
+          <td>${fmtDMY(s['Membership End Date'])}</td>
+          <td style="color:${balance>0?'var(--red)':'var(--green-mid)'};font-weight:600">₹${fmt(balance)}</td>
+          <td>${daysLeftHtml}</td>
           <td><span class="pill pill-${st.cls}"${title}>${st.label}</span></td>
           <td style="display:flex;gap:4px;">
             <button class="btn btn-sm btn-amber" onclick="openStudentEdit('${safe(s['Admission ID'])}')">✏️</button>
@@ -1266,7 +1265,7 @@ function renderStudents(data){
           </td>
         </tr>`;
       }).join('')
-    : '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">No students found</td></tr>';
+    : '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">No students found</td></tr>';
 }
 
 function filterStudents(){
@@ -1353,15 +1352,14 @@ async function generateReceipt(){
     allFees=await api('getFees');renderPaymentsTable(allFees);
     const now = new Date();
     const billDate = fmtDate(now);
-    const billDateTime = fmtDateTime(now);
-    showReceiptPreview({...body,receiptNo:res.receipt,billDate:billDate,dateTime:billDateTime});
+    const billTime = fmtTime(now);
+    showReceiptPreview({...body,receiptNo:res.receipt,billDate:billDate,billTime:billTime});
     // Auto-update student Membership End Date when fee receipt generated
     if(body.endDate && body.admissionId){
       try{
         await api('updateStudent',{id:body.admissionId,data:{'Membership End Date':body.endDate,'Membership Start Date':body.startDate}});
         allStudents=await api('getStudents');
         renderStudents(allStudents);
-        renderStudentPagePanels();
         toast('Receipt saved & Valid Until updated to '+body.endDate);
       }catch(eu){ toast('Receipt saved. End date update: '+eu.message,true); }
     }
@@ -1372,17 +1370,18 @@ let lastReceiptData=null;
 function showReceiptPreview(r){
   lastReceiptData=r;
   document.getElementById('receipt-preview').innerHTML=`
-    <div id="receipt-card" style="background:#fff;border:1px solid #ddd;border-radius:12px;padding:20px;font-family:Arial,sans-serif;font-size:13px;max-width:420px">
+    <div id="receipt-card" class="print-area" style="background:#fff;border:1px solid #ddd;border-radius:12px;padding:20px;font-family:Arial,sans-serif;font-size:14px;max-width:420px">
       <div style="text-align:center;padding-bottom:14px;margin-bottom:12px;border-bottom:2px solid #1a4a2e">
         <img src="${LOGO_B64}" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 auto 8px">
         <div style="font-size:17px;font-weight:700;color:#1a4a2e">NIC (Now I Can) Academy</div>
-        <div style="font-size:11px;color:#555;margin-top:2px">Study Hall &amp; Tutorial Centre</div>
-        <div style="font-size:11px;color:#555">Shilpa Nagar, Nagaram, Hyderabad,</div>
-        <div style="font-size:11px;color:#555">Secunderabad, Telangana 500083</div>
-        <div style="font-size:11px;color:#555;margin-top:2px">📞 8901989999</div>
+        <div style="font-size:13px;color:#555;margin-top:2px">Study Hall &amp; Tutorial Centre</div>
+        <div style="font-size:13px;color:#555">Shilpa Nagar, Nagaram, Hyderabad,</div>
+        <div style="font-size:13px;color:#555">Secunderabad, Telangana 500083</div>
+        <div style="font-size:13px;color:#555;margin-top:2px">📞 8901989999</div>
         <div style="margin-top:8px;background:#f5f9f5;border-radius:6px;padding:7px 14px;display:inline-block;text-align:left">
-          <div style="font-size:12px;color:#555;margin-bottom:3px">Receipt No: <strong style="color:#1a4a2e">${safe(r.receiptNo)}</strong></div>
-          <div style="font-size:12px;color:#555">Bill Date: <strong style="color:#1a4a2e">${safe(r.billDate)}</strong></div>
+          <div style="font-size:13px;color:#555;margin-bottom:3px">Receipt No: <strong style="color:#1a4a2e">${safe(r.receiptNo)}</strong></div>
+          <div style="font-size:13px;color:#555;margin-bottom:3px">Bill Date: <strong style="color:#1a4a2e">${safe(r.billDate)}</strong></div>
+          <div style="font-size:13px;color:#555">Bill Time: <strong style="color:#1a4a2e">${safe(r.billTime)}</strong></div>
         </div>
       </div>
       <div style="background:#f9f9f7;border-radius:6px;padding:9px 12px;margin-bottom:9px">
@@ -1405,12 +1404,12 @@ function showReceiptPreview(r){
           <span style="color:${(r.balanceAmount||0)>0?'#A32D2D':'#2d7a0f'}">₹${fmt(r.balanceAmount)}</span>
         </div>
       </div>
-      <div style="text-align:center;margin-top:12px;padding-top:10px;border-top:1px dashed #ccc;font-size:11px;color:#888">
+      <div style="text-align:center;margin-top:12px;padding-top:10px;border-top:1px dashed #ccc;font-size:13px;color:#888">
         Received by: <strong style="color:#333">${safe(r.receivedBy)}</strong><br>
-        <span style="font-size:10px">Computer-generated receipt. Thank you for choosing NIC Academy! 🎓</span>
+        <span style="font-size:12px">Computer-generated receipt. Thank you for choosing NIC Academy! 🎓</span>
       </div>
-      <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #ccc;font-size:10px;color:#555;text-align:left">
-        <strong style="display:block;margin-bottom:4px;color:#333;font-size:11px">Terms &amp; Conditions</strong>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px dashed #ccc;font-size:12px;color:#555;text-align:left">
+        <strong style="display:block;margin-bottom:4px;color:#333;font-size:13px">Terms &amp; Conditions</strong>
         <ul style="margin:0;padding-left:14px;line-height:1.5">
           <li>Fees must be renewed on or before the due date.</li>
           <li>Fees once paid are non-refundable and non-transferable.</li>
@@ -1425,7 +1424,7 @@ function showReceiptPreview(r){
       <button class="btn btn-success" onclick="sendReceiptViaWhatsApp()">📲 Send on WhatsApp</button>
       <button class="btn" onclick="window.print()">🖨 Print</button>
     </div>
-    <div id="wa-instructions" style="display:none;margin-top:10px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:12px;font-size:13px">
+    <div id="wa-instructions" style="display:none;margin-top:10px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:12px;font-size:14px">
       <strong>📲 Steps to send PDF on WhatsApp:</strong><br>
       1. PDF downloaded to your device.<br>
       2. WhatsApp Web is opening for <strong>${safe(r.mobile)}</strong>...<br>
@@ -1460,7 +1459,7 @@ async function sendReceiptViaWhatsApp(){
   await downloadReceiptPDF();
   document.getElementById('wa-instructions').style.display='block';
   const phone='91'+safe(lastReceiptData.mobile).replace(/\D/g,'');
-  const msg=`Dear ${safe(lastReceiptData.studentName)},\n\nPlease find your fee receipt attached.\n\nReceipt No: ${safe(lastReceiptData.receiptNo)}\nAmount Paid: ₹${fmt(lastReceiptData.amountPaid)}\nValid: ${safe(lastReceiptData.startDate)} to ${safe(lastReceiptData.endDate)}\n\nThank you!\nNIC Academy\n8901989999`;
+  const msg=`Dear ${safe(lastReceiptData.studentName)},\n\nPlease find your fee receipt attached.\n\nReceipt No: ${safe(lastReceiptData.receiptNo)}\nAmount Paid: ₹${fmt(lastReceiptData.amountPaid)}\nValid: ${fmtDMY(lastReceiptData.startDate)} to ${fmtDMY(lastReceiptData.endDate)}\n\nThank you!\nNIC Academy\n8901989999`;
   setTimeout(()=>window.open('https://web.whatsapp.com/send?phone='+phone+'&text='+encodeURIComponent(msg),'_blank'),1500);
 }
 
@@ -1483,9 +1482,9 @@ function renderDues(){
         const bal=allFees.filter(f=>f['Admission ID']===s['Admission ID']).reduce((sum,f)=>sum+(parseFloat(f['Balance Amount'])||0),0);
         const admType=safe(s['Joined For'])||safe(s['Admission Type'])||'—';
         const mob=safe(s['Parent Mobile']).replace(/\D/g,'');
-        const msg=`Dear ${safe(s.Name)},\nYour Study Hall membership will expire on ${safe(s['Membership End Date'])}.\nPlease renew to continue your access.\nNIC Academy - 8901989999`;
+        const msg=`Dear ${safe(s.Name)},\nYour Study Hall membership will expire on ${fmtDMY(s['Membership End Date'])}.\nPlease renew to continue your access.\nNIC Academy - 8901989999`;
         return `<tr><td><strong>${safe(s.Name)}</strong></td><td>${safe(s['Parent Mobile'])}</td>
-          <td>${admType}</td><td style="${c}">${safe(s['Membership End Date'])}</td>
+          <td>${admType}</td><td style="${c}">${fmtDMY(s['Membership End Date'])}</td>
           <td style="${bal>0?'color:var(--red)':''}"> ${bal>0?'₹'+fmt(bal):'—'}</td>
           <td style="${c}">${days<0?'Expired':days+'d'}</td>
           <td><a href="https://web.whatsapp.com/send?phone=91${mob}&text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success">📲 WA</a></td></tr>`;
@@ -1496,11 +1495,13 @@ function renderDues(){
 // ── PAYMENTS ──────────────────────────────────────────────────
 function loadPayments(){
   const from=v('pay-from'),to=v('pay-to'),mode=v('pay-mode');
+  const q=v('pay-search').toLowerCase();
   const filtered=allFees.filter(f=>{
     const dt=safe(f['Date & Time']);const parts=dt.split('/');
     let fd='';if(parts.length>=3) fd=parts[2].substring(0,4)+'-'+parts[1]+'-'+parts[0];
-    return(!from||fd>=from)&&(!to||fd<=to)&&(!mode||f['Payment Mode']===mode);
-  });
+    const matchesSearch=!q||safe(f['Student Name']).toLowerCase().includes(q)||safe(f['Admission ID']).toLowerCase().includes(q);
+    return(!from||fd>=from)&&(!to||fd<=to)&&(!mode||f['Payment Mode']===mode)&&matchesSearch;
+  }).sort((a,b)=>parseDateTimeStr(b['Date & Time'])-parseDateTimeStr(a['Date & Time'])); // most recent payment first
   const total=filtered.reduce((s,f)=>s+(parseFloat(f['Amount Paid'])||0),0);
   const bal=filtered.reduce((s,f)=>s+(parseFloat(f['Balance Amount'])||0),0);
   document.getElementById('pay-stats').innerHTML=`
@@ -1511,20 +1512,30 @@ function loadPayments(){
   renderPaymentsTable(filtered);
 }
 
+// Parses the "dd/MM/yyyy HH:mm" Date & Time string into a sortable Date object.
+function parseDateTimeStr(s){
+  s=safe(s);
+  const m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
+  if(!m) return new Date(0);
+  return new Date(+m[3],+m[2]-1,+m[1],+(m[4]||0),+(m[5]||0));
+}
+
 function renderPaymentsTable(data){
   const el=document.getElementById('pay-body');
   if(!el)return;
   el.innerHTML=data.length
     ? data.map(f=>`<tr>
         <td style="color:var(--blue);font-weight:600">${safe(f['Receipt Number'])}</td>
-        <td>${safe(f['Date & Time'])}</td><td>${safe(f['Student Name'])||'—'}</td>
+        <td>${safe(f['Date & Time'])}</td>
+        <td>${safe(f['Admission ID'])||'—'}</td>
+        <td>${safe(f['Student Name'])||'—'}</td>
         <td>${safe(f['Joined For'])||safe(f['Admission Type'])||'—'}</td>
         <td>${safe(f.Package)||'—'}</td>
         <td>₹${fmt(f['Total Fee'])}</td>
         <td style="color:var(--green-mid);font-weight:600">₹${fmt(f['Amount Paid'])}</td>
         <td style="color:${(parseFloat(f['Balance Amount'])||0)>0?'var(--red)':'var(--muted)'}">₹${fmt(f['Balance Amount'])}</td>
         <td>${safe(f['Payment Mode'])||'—'}</td></tr>`).join('')
-    : '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">No transactions found</td></tr>';
+    : '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px">No transactions found</td></tr>';
 }
 
 // ── STUDY HALL / CABINS ───────────────────────────────────────
@@ -1536,15 +1547,15 @@ function renderCabins(data){
     `<div class="stat-card ${colors[k]||''}"><div class="stat-label">${k}</div><div class="stat-val">${val}</div></div>`
   ).join('');
   if(!data.length){
-    document.getElementById('cabin-map').innerHTML='<div style="color:var(--muted);font-size:13px;padding:16px 0">No cabins added yet. Click "+ Add New Cabin" to get started.</div>';
+    document.getElementById('cabin-map').innerHTML='<div style="color:var(--muted);font-size:14px;padding:16px 0">No cabins added yet. Click "+ Add New Cabin" to get started.</div>';
     document.getElementById('cabin-body').innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">No cabins found</td></tr>';
     return;
   }
   document.getElementById('cabin-map').innerHTML=data.map(c=>`
     <div class="cabin-tile ${safe(c.Status).toLowerCase()||'available'}" title="${safe(c['Cabin ID'])} – ${safe(c.Status)}">
       <div class="cabin-num">${safe(c['Cabin ID'])}</div>
-      <div style="font-size:10px">${safe(c['AC / Non-AC'])||''}</div>
-      <div style="font-size:10px">${safe(c.Status)}</div>
+      <div style="font-size:12px">${safe(c['AC / Non-AC'])||''}</div>
+      <div style="font-size:12px">${safe(c.Status)}</div>
     </div>`).join('');
   document.getElementById('cabin-body').innerHTML=data.map(c=>`
     <tr>
@@ -1555,7 +1566,7 @@ function renderCabins(data){
       <td>${safe(c['Allocated Since'])||'—'}</td>
       <td>${safe(c.Notes)||'—'}</td>
       <td>
-        <select onchange="updateCabinStatus('${safe(c['Cabin ID'])}',this.value)" style="font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:#fff">
+        <select onchange="updateCabinStatus('${safe(c['Cabin ID'])}',this.value)" style="font-size:13px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:#fff">
           ${['Available','Occupied','Reserved','Maintenance'].map(st=>`<option ${safe(c.Status)===st?'selected':''}>${st}</option>`).join('')}
         </select>
       </td>
@@ -1626,8 +1637,8 @@ async function deleteCabin(id){
 function renderExpenses(data){
   document.getElementById('exp-body').innerHTML=data.length
     ? data.map(e=>`<tr>
-        <td style="color:var(--muted);font-size:11px">${safe(e['Expense ID'])}</td>
-        <td>${safe(e.Date)||'—'}</td><td>${safe(e.Category)||'—'}</td>
+        <td style="color:var(--muted);font-size:13px">${safe(e['Expense ID'])}</td>
+        <td>${fmtDMY(e.Date)}</td><td>${safe(e.Category)||'—'}</td>
         <td>${safe(e.Description)||'—'}</td>
         <td style="font-weight:600">₹${fmt(e.Amount)}</td>
         <td>${safe(e['Paid By'])||'—'}</td>
@@ -1643,7 +1654,7 @@ function renderExpBreakdown(data){
   const cats={};monthly.forEach(e=>cats[safe(e.Category)]=(cats[safe(e.Category)]||0)+(parseFloat(e.Amount)||0));
   const total=Object.values(cats).reduce((a,b)=>a+b,0);
   document.getElementById('exp-breakdown').innerHTML=total===0
-    ? '<div style="color:var(--muted);font-size:13px">No expenses this month</div>'
+    ? '<div style="color:var(--muted);font-size:14px">No expenses this month</div>'
     : Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([cat,amt])=>`
         <div class="prog-row">
           <div class="pr-head"><span>${cat}</span><span style="font-weight:600">₹${fmt(amt)}</span></div>
@@ -1688,6 +1699,7 @@ function updateReportDates(){
 
 async function loadReport(){
   const from=document.getElementById('rpt-from').value,to=document.getElementById('rpt-to').value;
+  document.getElementById('rpt-print-range').textContent = (from?fmtDMY(from):'—') + '  to  ' + (to?fmtDMY(to):'—');
   try{
     const res=await api('getReport',{from,to});
     document.getElementById('rpt-summary').innerHTML=`
@@ -1716,116 +1728,21 @@ async function loadReport(){
       <td style="color:var(--green-mid);font-weight:600">₹${fmt(f['Amount Paid'])}</td>
       <td>${safe(f['Payment Mode'])||'—'}</td></tr>`).join('')
       ||'<tr><td colspan="7" style="text-align:center;color:var(--muted)">No transactions</td></tr>';
-  }catch(e){toast(e.message,true);}
+  }catch(e){toast('Report error: '+e.message,true);}
 }
 
-// ── WHATSAPP ──────────────────────────────────────────────────
-const WA_TEMPLATES={
-  'Fee Reminder':'Dear [Student Name],\nYour fee of ₹[Amount] is pending.\nKindly make payment on or before [Due Date].\nNIC Academy: 8901989999',
-  'Admission Confirmation':'Dear [Student Name],\nYour admission is confirmed.\nAdmission ID: [ID]\nWelcome to NIC Academy! 🎉',
-  'Membership Renewal':'Dear [Student Name],\nYour membership expires on [Date].\nPlease renew to continue access.\nNIC Academy',
-  'Exam Wishes':'Dear [Student Name],\nBest wishes for your [Exam] exam! 🌟\nNIC Academy',
-  'Holiday Notice':'Dear Students,\nNIC Academy will be closed on [Date] for [Holiday].\nResumes from [Resume Date].\nNIC Academy',
-  'New Batch Announcement':'Dear [Student Name],\nNew batch for [Course] starts [Date].\nLimited seats!\nNIC Academy: 8901989999',
-  'Mock Exam Notification':'Dear [Student Name],\nMock Exam on [Date] at [Time].\nBe present 15 mins early.\nNIC Academy',
-  'Study Tips':'Dear [Student Name],\n📚 Study Tip: [Tip]\nKeep going!\nNIC Academy'
-};
-
-function loadWATemplate(){document.getElementById('wa-msg').value=WA_TEMPLATES[v('wa-cat')]||'';}
-function toggleWAStudent(){document.getElementById('wa-student-wrap').style.display=v('wa-to')==='individual'?'':'none';}
-function populateWAStudents(){
-  const sel=document.getElementById('wa-student');
-  sel.innerHTML='<option value="">-- select --</option>'+allStudents.map(s=>`<option value="${safe(s['Parent Mobile'])}">${safe(s.Name)} (${safe(s['Parent Mobile'])})</option>`).join('');
+// Prints just the report content (summary + chart + mode breakdown + fee
+// table) instead of a blank page — the .print-area class is added only for
+// the duration of the print, then removed again.
+function printReport(){
+  const el=document.getElementById('rpt-print-area');
+  const header=document.getElementById('rpt-print-header');
+  el.classList.add('print-area');
+  header.style.display='block';
+  window.print();
+  header.style.display='none';
+  el.classList.remove('print-area');
 }
-
-function renderWATemplates(){
-  document.getElementById('wa-templates').innerHTML=Object.entries(WA_TEMPLATES).map(([name,msg])=>`
-    <div class="wa-box" onclick="document.getElementById('wa-cat').value='${name}';document.getElementById('wa-msg').value='${msg.replace(/'/g,"\'")}'">
-      <strong>${name}</strong>
-      <div style="font-size:11px;color:var(--muted);margin-top:3px">${msg.substring(0,80)}...</div>
-    </div>`).join('');
-}
-
-function sendWhatsApp(){
-  const toType=v('wa-to'),msg=v('wa-msg');
-  if(!msg){toast('Please write a message',true);return;}
-  if(toType==='individual'){
-    const phone=document.getElementById('wa-student').value;
-    if(!phone){toast('Please select a student',true);return;}
-    window.open(`https://web.whatsapp.com/send?phone=91${phone.replace(/\D/g,'')}&text=${encodeURIComponent(msg)}`,'_blank');
-  }else{
-    let nums=allStudents;
-    if(toType==='studyhall') nums=nums.filter(s=>safe(s['Joined For'])==='Study Hall');
-    if(toType==='tutorial') nums=nums.filter(s=>safe(s['Joined For'])==='Tutorial');
-    if(toType==='due'){
-      const today=todayStr();
-      nums=nums.filter(s=>getStudentStatus(s).cls!=='inactive'&&safe(s['Membership End Date'])<=today);
-    }
-    if(!nums.length){toast('No students found',true);return;}
-    window.open(`https://web.whatsapp.com/send?phone=91${safe(nums[0]['Parent Mobile']).replace(/\D/g,'')}&text=${encodeURIComponent(msg)}`,'_blank');
-    if(nums.length>1) toast(`Opened for first student. Repeat for remaining ${nums.length-1}.`);
-  }
-}
-
-// ── STUDENT BIRTHDAY & RENEWALS (Students Page) ─────────────
-function renderStudentPagePanels(){
-  const today = new Date(); today.setHours(0,0,0,0);
-  const todayMMDD = todayStr().substring(5);
-
-  // Today's birthdays
-  const todayBdays = allStudents.filter(s=>{
-    const dob=safe(s['Date of Birth']);
-    return dob && dob.length>=7 && dob.substring(5)===todayMMDD;
-  });
-  const bdayTodayEl = document.getElementById('stu-bdays-today-body');
-  if(bdayTodayEl){
-    bdayTodayEl.innerHTML = todayBdays.length
-      ? todayBdays.map(s=>`<div class="bday-card"><div class="bday-icon">🎂</div><div class="bday-info"><div class="bday-name">${safe(s.Name)}</div><div class="bday-meta">${safe(s['Admission ID'])} · ${safe(s['Joined For'])||'—'} · ${safe(s['Parent Mobile'])}</div></div></div>`).join('')
-      : '<div style="color:var(--muted);font-size:13px;padding:8px 0">No birthdays today</div>';
-  }
-
-  // This week's birthdays (next 7 days)
-  const in7 = new Date(today); in7.setDate(in7.getDate()+7);
-  const weekBdays = allStudents.filter(s=>{
-    const dob=safe(s['Date of Birth']);
-    if(!dob||dob.length<7) return false;
-    const thisYear = today.getFullYear();
-    const bdayThis = new Date(thisYear+'-'+dob.substring(5));
-    if(isNaN(bdayThis)) return false;
-    return bdayThis>=today && bdayThis<=in7;
-  });
-  const bdayWeekEl = document.getElementById('stu-bdays-week-body');
-  if(bdayWeekEl){
-    bdayWeekEl.innerHTML = weekBdays.length
-      ? weekBdays.map(s=>{
-          const dob=safe(s['Date of Birth']);
-          const bdayThis = new Date(today.getFullYear()+'-'+dob.substring(5));
-          const days = Math.ceil((bdayThis-today)/86400000);
-          return `<div class="bday-card"><div class="bday-icon">${days===0?'🎂':'🎁'}</div><div class="bday-info"><div class="bday-name">${safe(s.Name)}</div><div class="bday-meta">${safe(s['Admission ID'])} · ${days===0?'Today':'In '+days+'d'} · ${safe(s['Parent Mobile'])}</div></div></div>`;
-        }).join('')
-      : '<div style="color:var(--muted);font-size:13px;padding:8px 0">No birthdays this week</div>';
-  }
-
-  // Upcoming renewals (15 days)
-  const in15 = new Date(today); in15.setDate(in15.getDate()+15);
-  const renewals = allStudents.filter(s=>{
-    if(getStudentStatus(s).cls==='inactive') return false; // skip students who've already left
-    const end=new Date(safe(s['Membership End Date']));
-    return !isNaN(end)&&end>=today&&end<=in15;
-  }).sort((a,b)=>new Date(a['Membership End Date'])-new Date(b['Membership End Date']));
-  const renewEl = document.getElementById('stu-renewals-body');
-  if(renewEl){
-    renewEl.innerHTML = renewals.length
-      ? `<div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Type</th><th>Expires</th><th>Days</th></tr></thead><tbody>
-          ${renewals.map(s=>{
-            const days=Math.ceil((new Date(safe(s['Membership End Date']))-today)/86400000);
-            const c=days<=3?'color:var(--red)':days<=7?'color:var(--amber)':'';
-            return `<tr><td>${safe(s.Name)}</td><td>${safe(s['Joined For'])||'—'}</td><td style="${c}">${safe(s['Membership End Date'])}</td><td style="${c}">${days}d</td></tr>`;
-          }).join('')}</tbody></table></div>`
-      : '<div style="color:var(--muted);font-size:13px;padding:8px 0">No renewals in next 15 days ✅</div>';
-  }
-}
-
 // ── STUDENT EDIT MODAL ────────────────────────────────────────
 function populateEditCabinSelect(){
   const sel=document.getElementById('sedit-cabin');
@@ -1911,13 +1828,11 @@ async function saveStudentEdit(){
     closeStudentModal();
     allStudents=await api('getStudents');
     renderStudents(allStudents);
-    renderStudentPagePanels();
-    populateWAStudents();
   }catch(e){toast(e.message,true);}
 }
 
 // ── INIT ─────────────────────────────────────────────────────
-window.addEventListener('load',()=>{
+window.addEventListener('load', async ()=>{
   document.getElementById('login-logo').src=LOGO_B64;
   document.getElementById('topbar-logo').src=LOGO_B64;
   document.getElementById('adm-id').value='Auto-generated on save';
@@ -1925,8 +1840,17 @@ window.addEventListener('load',()=>{
   document.getElementById('fee-start').value=todayStr();
   document.getElementById('exp-date').value=todayStr();
   updateReportDates();
-  renderWATemplates();
-  loadWATemplate();
+  // Keep the user logged in across refreshes / the mobile back button —
+  // only an explicit Logout click should end the session.
+  await restoreSession();
+});
+
+// Some mobile browsers restore the page from the back-forward cache (bfcache)
+// instead of firing 'load'. Re-check the session in that case too.
+window.addEventListener('pageshow', function(evt){
+  if(evt.persisted && !currentUser){
+    restoreSession();
+  }
 });
 </script>
 </body>

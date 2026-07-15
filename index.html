@@ -790,6 +790,7 @@ tbody tr:hover td{background:#faf9f7}
 <script>
 const LOGO_B64 = "Logo.jpg";
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxWNfpWheN-B1xVQAGdots0-ZoJdE3wkkGRHYDkZUM38AnWHRGq6GfzMZjAnhbfCziy/exec';
+ 
 
 // ── DATA STORE ────────────────────────────────────────────────
 let allStudents=[], allEnquiries=[], allFees=[], allExpenses=[], allCabins=[];
@@ -991,6 +992,44 @@ function fmtDate(d){
   const p=x=>String(x).padStart(2,'0');
   return `${p(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
+// Parses the server's "dd/MM/yyyy HH:mm" timestamp (as returned by addFee)
+// directly into display strings, WITHOUT going through a client-side Date
+// object — that would let the browser's own timezone/clock reinterpret it.
+// This guarantees the receipt shows exactly what the server actually
+// stored in the Fees sheet.
+function formatServerDateTime(dtStr){
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const m = safe(dtStr).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})$/);
+  if(!m){
+    // Fallback (e.g. server didn't return a timestamp) — use local clock.
+    const now=new Date();
+    return {billDate:fmtDate(now), billTime:fmtTime(now)};
+  }
+  const day=+m[1], month=+m[2], year=+m[3], hh=+m[4], mm=+m[5];
+  const billDate = `${String(day).padStart(2,'0')} ${months[month-1]} ${year}`;
+  let h=hh%12||12; const ampm=hh>=12?'PM':'AM';
+  const billTime = `${String(h).padStart(2,'0')}:${String(mm).padStart(2,'0')} ${ampm}`;
+  return {billDate, billTime};
+}
+
+// Formats an ISO (yyyy-MM-dd) date as dd/MMM/yyyy, e.g. "08/Jul/2026" —
+// used for Start Date / End Date on the Fee Receipt (display, print, and
+// PDF download all render from the same DOM, so fixing it here covers all
+// three). Parses the ISO string directly rather than via `new Date()`, so
+// it can never shift by a day due to timezone/UTC conversion.
+function fmtDMMMY(val){
+  const s=safe(val);
+  if(!s) return '—';
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m){
+    return `${m[3]}/${months[+m[2]-1]}/${m[1]}`;
+  }
+  const d=new Date(s);
+  if(isNaN(d)) return s;
+  return `${String(d.getDate()).padStart(2,'0')}/${months[d.getMonth()]}/${d.getFullYear()}`;
+}
+
 function todayStr(){return new Date().toISOString().split('T')[0];}
 // Converts an ISO (yyyy-MM-dd) or any parseable date string into DD/MM/YYYY
 // for display. Used throughout the app EXCEPT the Fee Receipt page, which
@@ -1350,9 +1389,11 @@ async function generateReceipt(){
     const res=await api('addFee',body);
     toast('Receipt: '+res.receipt);
     allFees=await api('getFees');renderPaymentsTable(allFees);
-    const now = new Date();
-    const billDate = fmtDate(now);
-    const billTime = fmtTime(now);
+    // Use the server's own timestamp (returned by addFee) rather than the
+    // browser/PC's local clock, so the receipt always matches what's
+    // actually stored in the Fees sheet — even if the device's clock or
+    // timezone is wrong.
+    const {billDate,billTime} = formatServerDateTime(res.dateTime);
     showReceiptPreview({...body,receiptNo:res.receipt,billDate:billDate,billTime:billTime});
     // Auto-update student Membership End Date when fee receipt generated
     if(body.endDate && body.admissionId){
@@ -1392,8 +1433,8 @@ function showReceiptPreview(r){
       ${rrow('Admission Type',safe(r.admissionType)||safe(r.joinedFor))}
       ${rrow('Package',safe(r.package))}
       ${rrow('Cabin',safe(r.cabinId)||'N/A')}
-      ${rrow('Start Date',safe(r.startDate)||'—')}
-      ${rrow('End Date',safe(r.endDate)||'—')}
+      ${rrow('Start Date',fmtDMMMY(r.startDate))}
+      ${rrow('End Date',fmtDMMMY(r.endDate))}
       ${rrow('Payment Mode',safe(r.paymentMode))}
       ${r.transactionRef?rrow('Ref No.',safe(r.transactionRef)):''}
       <div style="border:1px solid #ddd;border-radius:6px;padding:9px 12px;margin-top:9px">
@@ -1459,7 +1500,7 @@ async function sendReceiptViaWhatsApp(){
   await downloadReceiptPDF();
   document.getElementById('wa-instructions').style.display='block';
   const phone='91'+safe(lastReceiptData.mobile).replace(/\D/g,'');
-  const msg=`Dear ${safe(lastReceiptData.studentName)},\n\nPlease find your fee receipt attached.\n\nReceipt No: ${safe(lastReceiptData.receiptNo)}\nAmount Paid: ₹${fmt(lastReceiptData.amountPaid)}\nValid: ${fmtDMY(lastReceiptData.startDate)} to ${fmtDMY(lastReceiptData.endDate)}\n\nThank you!\nNIC Academy\n8901989999`;
+  const msg=`Dear ${safe(lastReceiptData.studentName)},\n\nPlease find your fee receipt attached.\n\nReceipt No: ${safe(lastReceiptData.receiptNo)}\nAmount Paid: ₹${fmt(lastReceiptData.amountPaid)}\nValid: ${fmtDMMMY(lastReceiptData.startDate)} to ${fmtDMMMY(lastReceiptData.endDate)}\n\nThank you!\nNIC Academy\n8901989999`;
   setTimeout(()=>window.open('https://web.whatsapp.com/send?phone='+phone+'&text='+encodeURIComponent(msg),'_blank'),1500);
 }
 

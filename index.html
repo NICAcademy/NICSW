@@ -287,6 +287,7 @@ tbody tr:hover td{background:#faf9f7}
         <div class="nav-item" onclick="showPage('payments',this)"><span class="ni">💰</span>Payments</div>
         <div class="nav-item" onclick="showPage('expenses',this)"><span class="ni">💳</span>Expenses</div>
         <div class="nav-item" onclick="showPage('reports',this)"><span class="ni">📈</span>Reports</div>
+        <div class="nav-item" onclick="showPage('activitylog',this)"><span class="ni">🕒</span>Activity Log</div>
       </div>
       <div class="nav-section">
         <div class="nav-label">Operations</div>
@@ -648,24 +649,46 @@ tbody tr:hover td{background:#faf9f7}
             <h2 style="font-size:16px;font-weight:700;color:var(--green)">NIC (Now I Can) Academy — Report</h2>
             <div id="rpt-print-range" style="font-size:14px;color:var(--muted)"></div>
           </div>
-          <div id="rpt-summary" class="grid3"></div>
-          <div class="grid2">
-            <div class="card">
-              <div class="card-title">Income vs Expenses</div>
-              <div class="chart-wrap" id="rpt-chart" style="height:120px"></div>
-              <div class="chart-legend"><span><span class="dot" style="background:var(--green-mid)"></span>Income</span><span><span class="dot" style="background:#E24B4A"></span>Expenses</span></div>
-            </div>
-            <div class="card">
-              <div class="card-title">Payment Mode Breakdown</div>
-              <div id="rpt-modes"></div>
-            </div>
-          </div>
+          <div id="rpt-summary" class="stat-grid"></div>
           <div class="card">
             <div class="card-title">Fee Transactions</div>
             <div class="tbl-wrap">
               <table id="rpt-tbl">
                 <thead><tr><th>Receipt</th><th>Date</th><th>Student</th><th>Admission Type</th><th>Package</th><th>Paid</th><th>Mode</th></tr></thead>
                 <tbody id="rpt-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY LOG -->
+      <div id="page-activitylog" class="page">
+        <div class="toolbar">
+          <div class="search-wrap" style="flex:1;min-width:180px"><input type="text" id="log-search" placeholder="Search by student name, student ID, or username..." oninput="renderActivityLog()"></div>
+          <input type="date" id="log-date" onchange="renderActivityLog()">
+          <select id="log-module" onchange="renderActivityLog()">
+            <option value="">All Modules</option>
+            <option>Student</option><option>Fee Receipt</option><option>Expense</option>
+            <option>Teacher</option><option>Daily Activity</option>
+          </select>
+          <select id="log-action" onchange="renderActivityLog()">
+            <option value="">All Actions</option>
+            <option>Added</option><option>Created</option><option>Updated</option><option>Deleted</option>
+          </select>
+          <button class="btn" onclick="loadActivityLog()">↻ Refresh</button>
+          <button class="btn" onclick="printActivityLog()">🖨 Print</button>
+          <button class="btn" onclick="exportTableCSV('log-tbl','ActivityLog')">⬇ Export</button>
+        </div>
+        <div id="log-print-area">
+          <div id="log-print-header" style="display:none;margin-bottom:12px">
+            <h2 style="font-size:16px;font-weight:700;color:var(--green)">NIC (Now I Can) Academy — Activity Log</h2>
+          </div>
+          <div class="card">
+            <div class="tbl-wrap">
+              <table id="log-tbl">
+                <thead><tr><th>Date</th><th>Time</th><th>Username</th><th>Role</th><th>Module</th><th>Action</th><th>Student ID</th><th>Student Name</th><th>Description</th></tr></thead>
+                <tbody id="log-body"><tr><td colspan="9" class="loading"><span class="spin"></span>Loading...</td></tr></tbody>
               </table>
             </div>
           </div>
@@ -789,8 +812,7 @@ tbody tr:hover td{background:#faf9f7}
 
 <script>
 const LOGO_B64 = "Logo.jpg";
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxWNfpWheN-B1xVQAGdots0-ZoJdE3wkkGRHYDkZUM38AnWHRGq6GfzMZjAnhbfCziy/exec';
- 
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxONb-zqIDfK_lazu0IWvYDipKP2pyAkZCBcp1S6rbLoCRppgG4OwMelBEcdLPVpbV1/exec';
 
 // ── DATA STORE ────────────────────────────────────────────────
 let allStudents=[], allEnquiries=[], allFees=[], allExpenses=[], allCabins=[];
@@ -898,11 +920,20 @@ async function api(action, body={}){
   let json = null;
   let networkError = null;
 
+  // Automatically attach who's making the request, so the backend can
+  // attribute Activity Log entries without every call site having to
+  // remember to pass it in.
+  const payload = {action, ...body};
+  if(currentUser){
+    payload.actingUser = currentUser.username;
+    payload.actingRole = currentUser.role;
+  }
+
   try{
     const res = await fetch(APPS_SCRIPT_URL,{
       method:'POST',
       headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({action,...body}),
+      body:JSON.stringify(payload),
       redirect:'follow'
     });
     const text = await res.text();
@@ -913,7 +944,7 @@ async function api(action, body={}){
 
   if(json === null){
     try{
-      const url = APPS_SCRIPT_URL+'?payload='+encodeURIComponent(JSON.stringify({action,...body}));
+      const url = APPS_SCRIPT_URL+'?payload='+encodeURIComponent(JSON.stringify(payload));
       const res2 = await fetch(url,{method:'GET',redirect:'follow'});
       const text2 = await res2.text();
       json = JSON.parse(text2);
@@ -956,6 +987,7 @@ function showPage(id,el){
   if(id==='payments') loadPayments();
   if(id==='dues') renderDues();
   if(id==='students') renderStudents(allStudents);
+  if(id==='activitylog') loadActivityLog();
 }
 
 // ── SIDEBAR TOGGLE ────────────────────────────────────────────
@@ -1070,6 +1102,17 @@ function exportTableCSV(tid,name){
 }
 
 // ── DASHBOARD ─────────────────────────────────────────────────
+// Refreshes only the summary view the user is currently looking at
+// (Dashboard stats or the Reports page) after a Student/Fee/Expense
+// Add/Update/Delete — so numbers are always live with no manual refresh,
+// without wastefully reloading views the user isn't even on.
+function refreshLiveWidgets(){
+  const dash=document.getElementById('page-dashboard');
+  if(dash && dash.classList.contains('active')) loadDashboard();
+  const rpt=document.getElementById('page-reports');
+  if(rpt && rpt.classList.contains('active')) loadReport();
+}
+
 async function loadDashboard(){
   try{
     const d=await api('getDashboard');
@@ -1242,6 +1285,7 @@ async function saveAdmission(){
     document.getElementById('adm-id').value=res.id;
     allStudents=await api('getStudents');allCabins=await api('getCabins');
     renderStudents(allStudents);renderCabins(allCabins);populateCabinSelect();populateFeeDropdown();
+    refreshLiveWidgets();
   }catch(e){toast(e.message,true);}
 }
 function clearAdmission(){
@@ -1323,6 +1367,7 @@ async function deleteStudent(id){
   try{
     await api('deleteStudent',{id});toast('Student deleted');
     allStudents=await api('getStudents');renderStudents(allStudents);populateFeeDropdown();
+    refreshLiveWidgets();
   }catch(e){toast(e.message,true);}
 }
 
@@ -1395,6 +1440,7 @@ async function generateReceipt(){
     // timezone is wrong.
     const {billDate,billTime} = formatServerDateTime(res.dateTime);
     showReceiptPreview({...body,receiptNo:res.receipt,billDate:billDate,billTime:billTime});
+    refreshLiveWidgets();
     // Auto-update student Membership End Date when fee receipt generated
     if(body.endDate && body.admissionId){
       try{
@@ -1712,6 +1758,7 @@ async function saveExpense(){
     toast('Expense saved!');
     ['exp-date','exp-desc','exp-amount'].forEach(id=>document.getElementById(id).value='');
     allExpenses=await api('getExpenses');renderExpenses(allExpenses);
+    refreshLiveWidgets();
   }catch(e){toast(e.message,true);}
 }
 
@@ -1720,6 +1767,7 @@ async function deleteExpense(id){
   try{
     await api('deleteExpense',{id});toast('Expense deleted');
     allExpenses=await api('getExpenses');renderExpenses(allExpenses);
+    refreshLiveWidgets();
   }catch(e){toast(e.message,true);}
 }
 
@@ -1742,25 +1790,19 @@ async function loadReport(){
   const from=document.getElementById('rpt-from').value,to=document.getElementById('rpt-to').value;
   document.getElementById('rpt-print-range').textContent = (from?fmtDMY(from):'—') + '  to  ' + (to?fmtDMY(to):'—');
   try{
+    // Always reads fresh from the backend (which itself reads straight from
+    // Google Sheets) — nothing here is cached, so the Reports page never
+    // shows stale data.
     const res=await api('getReport',{from,to});
     document.getElementById('rpt-summary').innerHTML=`
       <div class="stat-card acc-green"><div class="stat-label">Total Income</div><div class="stat-val">₹${fmt(res.income)}</div></div>
       <div class="stat-card acc-red"><div class="stat-label">Total Expenses</div><div class="stat-val">₹${fmt(res.expense)}</div></div>
-      <div class="stat-card ${(res.profit||0)>=0?'acc-green':'acc-red'}"><div class="stat-label">Net Profit</div><div class="stat-val">₹${fmt(res.profit)}</div></div>`;
-    const maxV=Math.max(res.income,res.expense,1);
-    document.getElementById('rpt-chart').innerHTML=`
-      <div style="flex:1;max-width:120px;display:flex;gap:4px;align-items:flex-end">
-        <div class="bar income" style="height:${Math.round(res.income/maxV*95)}%;flex:1" title="Income ₹${fmt(res.income)}"></div>
-        <div class="bar exp" style="height:${Math.round(res.expense/maxV*95)}%;flex:1" title="Expenses ₹${fmt(res.expense)}"></div>
-      </div>`;
-    const modes={};
-    (res.fees||[]).forEach(f=>modes[safe(f['Payment Mode'])]=(modes[safe(f['Payment Mode'])]||0)+(parseFloat(f['Amount Paid'])||0));
-    const mTotal=Object.values(modes).reduce((a,b)=>a+b,0)||1;
-    document.getElementById('rpt-modes').innerHTML=Object.entries(modes).map(([mode,amt])=>`
-      <div class="prog-row">
-        <div class="pr-head"><span>${mode}</span><span>₹${fmt(amt)}</span></div>
-        <div class="prog-bar"><div class="prog-fill" style="width:${Math.round(amt/mTotal*100)}%;background:var(--blue)"></div></div>
-      </div>`).join('')||'<div style="color:var(--muted)">No data</div>';
+      <div class="stat-card ${(res.profit||0)>=0?'acc-green':'acc-red'}"><div class="stat-label">Net Profit</div><div class="stat-val">₹${fmt(res.profit)}</div></div>
+      <div class="stat-card acc-blue"><div class="stat-label">Total Students</div><div class="stat-val">${res.totalStudents||0}</div></div>
+      <div class="stat-card acc-green"><div class="stat-label">Active Students</div><div class="stat-val">${res.activeStudents||0}</div></div>
+      <div class="stat-card acc-amber"><div class="stat-label">Inactive Students</div><div class="stat-val">${res.inactiveStudents||0}</div></div>
+      <div class="stat-card acc-green"><div class="stat-label">Today's Collection</div><div class="stat-val">₹${fmt(res.todayCollection)}</div></div>
+      <div class="stat-card acc-green"><div class="stat-label">Monthly Collection</div><div class="stat-val">₹${fmt(res.monthCollection)}</div></div>`;
     document.getElementById('rpt-body').innerHTML=(res.fees||[]).map(f=>`<tr>
       <td>${safe(f['Receipt Number'])}</td><td>${safe(f['Date & Time'])}</td>
       <td>${safe(f['Student Name'])||'—'}</td>
@@ -1772,9 +1814,9 @@ async function loadReport(){
   }catch(e){toast('Report error: '+e.message,true);}
 }
 
-// Prints just the report content (summary + chart + mode breakdown + fee
-// table) instead of a blank page — the .print-area class is added only for
-// the duration of the print, then removed again.
+// Prints just the report content (summary cards + fee table) instead of a
+// blank page — the .print-area class is added only for the duration of
+// the print, then removed again.
 function printReport(){
   const el=document.getElementById('rpt-print-area');
   const header=document.getElementById('rpt-print-header');
@@ -1784,6 +1826,59 @@ function printReport(){
   header.style.display='none';
   el.classList.remove('print-area');
 }
+
+// ── ACTIVITY LOG ─────────────────────────────────────────────
+// Loaded lazily — only fetched from the backend when the Activity Log page
+// is actually opened, not on every app load, keeping startup fast.
+let allActivityLog=[];
+async function loadActivityLog(){
+  document.getElementById('log-body').innerHTML='<tr><td colspan="9" class="loading"><span class="spin"></span>Loading...</td></tr>';
+  try{
+    allActivityLog=await api('getActivityLog'); // already sorted newest-first by the backend
+    renderActivityLog();
+  }catch(e){toast('Activity Log error: '+e.message,true);}
+}
+
+function renderActivityLog(){
+  const q=v('log-search').toLowerCase();
+  const dateFilter=v('log-date');
+  const moduleFilter=v('log-module');
+  const actionFilter=v('log-action');
+  const filtered=allActivityLog.filter(l=>{
+    const matchesSearch=!q
+      || safe(l['Student Name']).toLowerCase().includes(q)
+      || safe(l['Student ID']).toLowerCase().includes(q)
+      || safe(l['Username']).toLowerCase().includes(q);
+    // log-date input is yyyy-MM-dd; log Date column is dd/MM/yyyy — convert for comparison.
+    const matchesDate=!dateFilter || fmtDMY(dateFilter)===safe(l['Date']);
+    const matchesModule=!moduleFilter || safe(l['Module'])===moduleFilter;
+    const matchesAction=!actionFilter || safe(l['Action'])===actionFilter;
+    return matchesSearch && matchesDate && matchesModule && matchesAction;
+  });
+  document.getElementById('log-body').innerHTML=filtered.length
+    ? filtered.map(l=>`<tr>
+        <td>${safe(l['Date'])}</td>
+        <td>${safe(l['Time'])}</td>
+        <td>${safe(l['Username'])||'—'}</td>
+        <td>${safe(l['Role'])||'—'}</td>
+        <td>${safe(l['Module'])||'—'}</td>
+        <td><span class="pill pill-${safe(l['Action'])==='Deleted'?'expired':safe(l['Action'])==='Updated'?'inactive':'active'}">${safe(l['Action'])}</span></td>
+        <td>${safe(l['Student ID'])||'—'}</td>
+        <td>${safe(l['Student Name'])||'—'}</td>
+        <td>${safe(l['Description'])||'—'}</td></tr>`).join('')
+    : '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">No activity found</td></tr>';
+}
+
+function printActivityLog(){
+  const el=document.getElementById('log-print-area');
+  const header=document.getElementById('log-print-header');
+  el.classList.add('print-area');
+  header.style.display='block';
+  window.print();
+  header.style.display='none';
+  el.classList.remove('print-area');
+}
+
 // ── STUDENT EDIT MODAL ────────────────────────────────────────
 function populateEditCabinSelect(){
   const sel=document.getElementById('sedit-cabin');
@@ -1869,6 +1964,7 @@ async function saveStudentEdit(){
     closeStudentModal();
     allStudents=await api('getStudents');
     renderStudents(allStudents);
+    refreshLiveWidgets();
   }catch(e){toast(e.message,true);}
 }
 
